@@ -1,80 +1,118 @@
-const Register = () => {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="w-full max-w-2xl p-6">
-          <h2 className="mb-6 text-4xl font-bold text-center text-green-600">EMS</h2>
-          <form>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              <div>
-                <label className="block mb-2 text-sm font-medium text-gray-700" htmlFor="full-name">Full Name</label>
-                <input
-                  className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                  id="full-name"
-                  type="text"
-                  placeholder="Saga Singh"
-                />
-              </div>
-              <div>
-                <label className="block mb-2 text-sm font-medium text-gray-700" htmlFor="phone">Phone number</label>
-                <input
-                  className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                  id="phone"
-                  type="text"
-                  placeholder="7667425XXXX"
-                />
-              </div>
-              <div>
-                <label className="block mb-2 text-sm font-medium text-gray-700" htmlFor="address">Address</label>
-                <input
-                  className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                  id="address"
-                  type="text"
-                  placeholder="Viswas nagar, Delhi"
-                />
-              </div>
-              <div>
-                <label className="block mb-2 text-sm font-medium text-gray-700" htmlFor="aadhaar">Aadhaar card number</label>
-                <input
-                  className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                  id="aadhaar"
-                  type="text"
-                  placeholder="3077 6689 XXXX XXXX"
-                />
-                <div className="flex items-center mt-2">
-                  <input
-                    type="checkbox"
-                    className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
-                    id="send-otp"
-                  />
-                  <label htmlFor="send-otp" className="ml-2 text-sm text-gray-700">Send OTP</label>
-                </div>
-              </div>
-            </div>
-            <div className="mt-4">
-              <label className="block mb-2 text-sm font-medium text-gray-700" htmlFor="otp">OTP</label>
-              <input
-                className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                id="otp"
-                type="text"
-                placeholder="XXXXX"
-              />
-            </div>
-            <button
-              className="w-full px-4 py-2 mt-6 font-semibold text-white bg-green-600 rounded-lg shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-              type="submit"
-            >
-              Register
-            </button>
-          </form>
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-700">
-              Already registered, <a href="/login" className="font-medium text-green-600 hover:underline">Login please!</a>
-            </p>
+import { useForm, SubmitHandler } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Link } from "react-router-dom";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ChangeEvent, useEffect, useState } from "react";
+
+interface RegistrationFormData {
+  fullName: string;
+  phoneNumber: string;
+  address: string;
+  aadhaarCardNumber: string;
+  otp: string;
+  sendOTP: boolean;
+}
+
+function Register() {
+  const { register, handleSubmit, setValue, formState: { errors } } =
+    useForm<RegistrationFormData>();
+  
+  const [sendOTP, setSendOTP] = useState(false);
+
+  useEffect(() => {
+    // Update the "otp" field's disabled state whenever sendOTP changes
+    setValue('otp', '', { shouldValidate: true, shouldDirty: true }); // Clear and re-validate OTP field
+  }, [sendOTP, setValue]);
+
+  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSendOTP(e.target.checked);
+  };
+
+  const onSubmit: SubmitHandler<RegistrationFormData> = (data) => {
+    console.log(data);
+    // Perform registration logic (e.g., send OTP, validate, register user)
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center">
+      <div className="p-8 w-full max-w-2xl">
+        <h2 className="text-4xl font-bold mb-12 text-center text-teal-600">EMS</h2>
+
+        <form className="flex flex-col justify-center items-center" onSubmit={handleSubmit(onSubmit)}>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 w-full">
+          <div className="mb-4 space-y-2">
+            <Label htmlFor="fullName">Full Name</Label>
+            <Input {...register("fullName", { required: true })} />
+            {errors.fullName && (
+              <p className="text-red-500 text-sm mt-1">Full Name is required</p>
+            )}
           </div>
-        </div>
+
+          <div className="mb-4 space-y-2">
+            <Label htmlFor="phoneNumber">Phone number</Label>
+            <Input type="number" {...register("phoneNumber", { required: true })} />
+            {errors.phoneNumber && (
+              <p className="text-red-500 text-sm mt-1">
+                Phone number is required
+              </p>
+            )}
+          </div>
+          <div className="mb-4 space-y-2">
+            <Label htmlFor="address">Address</Label>
+            <Input {...register("address", { required: true })} />
+            {errors.address && (
+              <p className="text-red-500 text-sm mt-1">Address is required</p>
+            )}
+          </div>
+          <div>
+          <div className="mb-4 space-y-2">
+            <Label htmlFor="aadhaarCardNumber">Adhaar card number</Label>
+            <Input
+              {...register("aadhaarCardNumber", { required: true })}
+            />
+            {errors.aadhaarCardNumber && (
+              <p className="text-red-500 text-sm mt-1">
+                Adhaar card number is required
+              </p>
+            )}
+          </div>
+
+          <div className="flex items-center mb-4">
+            <Checkbox 
+               {...register("sendOTP")} 
+               id="sendOTP"
+               checked={sendOTP} // Bind checked state to sendOTP
+               onChange={handleCheckboxChange} // Update sendOTP on change 
+            />
+            <Label htmlFor="sendOTP" className="ml-2">
+              Send OTP
+            </Label>
+          </div>
+          </div>
+
+          </div>
+
+          <div className="mb-4 space-y-2">
+            <Label htmlFor="otp">OTP</Label>
+            <Input type="text" {...register("otp")} disabled={!sendOTP} />
+          </div>
+
+          <Button type="submit" className="w-full mt-4 bg-teal-500 text-white hover:bg-teal-600">
+            Register
+          </Button>
+        </form>
+
+        <p 
+            className="text-center mt-6 text-sm text-gray-700"
+             // Assuming you have a /login route
+        >
+          Already registered, <Link to="/login" className="font-medium text-teal-500 hover:underline">LOGIN</Link> please!
+        </p>
       </div>
-    )
-  }
-  
-  export default Register
-  
+    </div>
+  );
+}
+
+export default Register;

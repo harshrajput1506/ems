@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 function AdminLogin() {
   const {
@@ -16,8 +17,10 @@ function AdminLogin() {
     console.log(data);
   };
 
+  const navigate = useNavigate()
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center">
+    <div className="min-h-screen flex flex-col items-center justify-center ">
       <div className="p-8 w-96">
         <h2 className="text-4xl font-bold mb-12 text-center text-teal-600">EMS</h2>
 
@@ -32,7 +35,9 @@ function AdminLogin() {
             <Input type="password" {...register("password", { required: true })} />
             {errors.password && <p className="text-red-500 text-sm mt-1">Password is required</p>}
           </div>
-          <Button type="submit" className="w-full mt-4  bg-teal-500 text-white hover:bg-teal-600">
+          <Button
+               type="submit"
+               className="w-full mt-4  bg-teal-500 text-white hover:bg-teal-600">
             Login as ADMIN
           </Button>
         </form>
@@ -40,7 +45,7 @@ function AdminLogin() {
         <div className="text-center mt-6 text-sm text-gray-500">
           or sign up in with
         </div>
-        <Button variant="link" className="w-full mt-4 text-teal-500">
+        <Button variant="link" className="w-full mt-4 text-teal-500" onClick={() => navigate("/login")}>
           Login as a Voter
         </Button>
       </div>
