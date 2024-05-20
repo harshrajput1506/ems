@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface RegistrationFormData {
   fullName: string;
@@ -19,16 +19,16 @@ function Register() {
   const { register, handleSubmit, setValue, formState: { errors } } =
     useForm<RegistrationFormData>();
   
-  const [sendOTP, setSendOTP] = useState(false);
+  const [sendOTP] = useState(false);
 
   useEffect(() => {
     // Update the "otp" field's disabled state whenever sendOTP changes
     setValue('otp', '', { shouldValidate: true, shouldDirty: true }); // Clear and re-validate OTP field
   }, [sendOTP, setValue]);
 
-  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSendOTP(e.target.checked);
-  };
+  //const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
+    //setSendOTP(e.target.checked);
+  //};
 
   const onSubmit: SubmitHandler<RegistrationFormData> = (data) => {
     console.log(data);
@@ -83,8 +83,8 @@ function Register() {
             <Checkbox 
                {...register("sendOTP")} 
                id="sendOTP"
-               checked={sendOTP} // Bind checked state to sendOTP
-               onChange={handleCheckboxChange} // Update sendOTP on change 
+               className=" accent-teal-500"
+               // Update sendOTP on change 
             />
             <Label htmlFor="sendOTP" className="ml-2">
               Send OTP
