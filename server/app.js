@@ -3,15 +3,27 @@ const express = require('express')
 
 const app = express()
 
-app.use('/api/v1/test', require('./routes/routes'))
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
-app.use('*',(req, res, next) => {
-    res.status(404);
-    res.json({
-      success: 0,
-      message: "Not found"
-    })
+app.use('/api/v1/', require('./routes/routes'))
+
+
+//Handle Errors
+app.use((req, res, next) => {
+  const error = new Error("Not Found");
+  error.status = 404;
+  next(error);
+});
+app.use((error, req, res, next) => {
+  res.status(error.status || 500);
+  res.json({
+    success: 0,
+    error: {
+      message: error.message
+    }
   })
+});
   
 
 const port = process.env.APP_PORT || 3000

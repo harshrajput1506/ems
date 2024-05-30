@@ -1,8 +1,5 @@
-const { Sequelize } = require('sequelize')
+const { PrismaClient } = require('@prisma/client')
 
-const env = process.env.NODE_ENV
-const config = require('./config')[env]
+const prisma = new PrismaClient()
 
-const sequelize = new Sequelize(config)
-
-module.exports = sequelize
+module.exports={prisma}
