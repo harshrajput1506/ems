@@ -49,3 +49,22 @@ model KYV {
   doneAt DateTime @default(now())
 }
 
+model Candidates {
+  id Int @id @default(autoincrement())
+  name String
+  age Int
+  political_party String
+  consistuency String
+  election Elections @relation(fields: [electionId], references: [id])
+  electionId Int
+  votes Int @default(0)
+}
+
+model Elections {
+  id Int @id @default(autoincrement())
+  title String
+  status String @default("Upcoming")    // Upcoming, Completed, Ongoing
+  startdate DateTime
+  enddate DateTime
+  candidates Candidates[]
+}
