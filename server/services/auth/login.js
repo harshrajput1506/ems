@@ -36,7 +36,7 @@ const sendLoginOtp = async (number) => {
     // You can rethrow the error to be handled by a higher-level error handler
     // Or, you can return a more specific error message:
     throw new Error("Failed to send OTP. Please try again later."); 
-  }
+  } 
 };
 
 const loginByOtp = async (number, otp) => {
@@ -65,7 +65,7 @@ const loginByOtp = async (number, otp) => {
     } catch (error) {
         
         throw error
-    }
+    } 
 };
 
 const verifyOtp = async (number, otp) => {

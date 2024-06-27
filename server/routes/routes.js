@@ -1,5 +1,6 @@
 const { test, regsiter, sendAadharOtp, loginOtp, loginVerifyOtp } = require('../controllers/auth.controller')
-const { createElection } = require('../controllers/election.controller')
+const { createElection, addCandidate, deleteCandidate, updateElection } = require('../controllers/election.controller')
+const { getCandidatesByConsistuency } = require('../services/election/election.services')
 
 const router = require('express').Router()
 
@@ -11,6 +12,12 @@ router.post('/auth/login', loginVerifyOtp)
 
 
 router.post('/admin/election', createElection)
-router.post('/admin/candidate')
-router.delete('/admin/candidate')
+router.post('/admin/candidate', addCandidate)
+router.delete('/admin/candidate', deleteCandidate)
+router.patch('/admin/election', updateElection)
+router.get('/election/candidate', getCandidatesByConsistuency)
+
+
+
+
 module.exports = router

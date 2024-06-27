@@ -63,7 +63,7 @@ model Candidates {
 model Elections {
   id Int @id @default(autoincrement())
   title String
-  status String @default("Upcoming")    // Upcoming, Completed, Ongoing
+  status String @default("Pending")    // Upcoming, Completed, Ongoing, Pending
   startdate DateTime
   enddate DateTime
   candidates Candidates[]
