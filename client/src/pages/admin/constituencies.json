@@ -1,0 +1,19 @@
+[
+    {
+      "name": "Constituency A",
+      "candidates": [
+        { "name": "Candidate 1", "party": "Party A", "votes": 500 },
+        { "name": "Candidate 2", "party": "Party B", "votes": 300 },
+        { "name": "Candidate 3", "party": "Party C", "votes": 200 }
+      ]
+    },
+    {
+      "name": "Constituency B",
+      "candidates": [
+        { "name": "Candidate 4", "party": "Party A", "votes": 700 },
+        { "name": "Candidate 5", "party": "Party B", "votes": 500 },
+        { "name": "Candidate 6", "party": "Party C", "votes": 300 }
+      ]
+    }
+  ]
+  

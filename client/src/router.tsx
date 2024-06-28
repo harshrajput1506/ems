@@ -5,6 +5,9 @@ import Register from "./pages/auth/Register";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ElectionPage from "./pages/admin/ElectionPage";
+import AddElection from "./pages/admin/AddElectionPage.jsx";
+import PublishResult from "./pages/admin/PublishResult.jsx";
+
 
 const router = createBrowserRouter([
     {
@@ -21,7 +24,7 @@ const router = createBrowserRouter([
         path:"/register",
         element:<Register/>
     },
-    
+   
     {
         path:"/admin/login",
         element:<AdminLogin/>
@@ -37,8 +40,13 @@ const router = createBrowserRouter([
     },
     {
         path : "/admin/add-election",
-        element:<ElectionPage />
-    }
+        element:<AddElection />
+    },
+    {
+        path : "/admin/publish-result",
+        element:<PublishResult />
+    },
+
 ])
 
 export default router
