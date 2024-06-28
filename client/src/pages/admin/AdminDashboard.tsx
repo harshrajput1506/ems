@@ -116,10 +116,10 @@ function AdminDashboard() {
 
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row">
+    <div className="min-h-screen flex flex-col w-vdw md:flex-row">
       {/* Sidebar (Similar to the image you provided) */}
-      <Sidebar />
-      <div className="px-4 m-4">
+      <Sidebar  />
+      <div className="px-4 m-4 w-10/12">
         <div ><Hello /></div>
         <div>
 
