@@ -1,19 +1,46 @@
 [
-    {
-      "name": "Constituency A",
-      "candidates": [
-        { "name": "Candidate 1", "party": "Party A", "votes": 500 },
-        { "name": "Candidate 2", "party": "Party B", "votes": 300 },
-        { "name": "Candidate 3", "party": "Party C", "votes": 200 }
-      ]
-    },
-    {
-      "name": "Constituency B",
-      "candidates": [
-        { "name": "Candidate 4", "party": "Party A", "votes": 700 },
-        { "name": "Candidate 5", "party": "Party B", "votes": 500 },
-        { "name": "Candidate 6", "party": "Party C", "votes": 300 }
-      ]
-    }
-  ]
-  
+  {
+    "electionId": "1",
+    "electionName": "Election 1",
+    "constituencies": [
+      {
+        "name": "Constituency A",
+        "candidates": [
+          { "name": "Candidate 1", "party": "Party A", "votes": 500 },
+          { "name": "Candidate 2", "party": "Party B", "votes": 300 },
+          { "name": "Candidate 3", "party": "Party C", "votes": 200 }
+        ]
+      },
+      {
+        "name": "Constituency B",
+        "candidates": [
+          { "name": "Candidate 4", "party": "Party A", "votes": 700 },
+          { "name": "Candidate 5", "party": "Party B", "votes": 500 },
+          { "name": "Candidate 6", "party": "Party C", "votes": 300 }
+        ]
+      }
+    ]
+  },
+  {
+    "electionId": "2",
+    "electionName": "Election 2",
+    "constituencies": [
+      {
+        "name": "Constituency C",
+        "candidates": [
+          { "name": "Candidate 7", "party": "Party A", "votes": 400 },
+          { "name": "Candidate 8", "party": "Party B", "votes": 250 },
+          { "name": "Candidate 9", "party": "Party C", "votes": 150 }
+        ]
+      },
+      {
+        "name": "Constituency D",
+        "candidates": [
+          { "name": "Candidate 10", "party": "Party A", "votes": 600 },
+          { "name": "Candidate 11", "party": "Party B", "votes": 450 },
+          { "name": "Candidate 12", "party": "Party C", "votes": 350 }
+        ]
+      }
+    ]
+  }
+]

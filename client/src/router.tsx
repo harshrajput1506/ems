@@ -5,9 +5,12 @@ import Register from "./pages/auth/Register";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ElectionPage from "./pages/admin/ElectionPage";
-import AddElection from "./pages/admin/AddElectionPage.jsx";
-import PublishResult from "./pages/admin/PublishResult.jsx";
-
+import AddElection from "./pages/admin/AddElectionPage";
+import PublishResult from "./pages/admin/PublishResult";
+import UserDashboard from "./pages/user/UserDashboard";
+import KYV from "./pages/user/KYV";
+import Vote from "./pages/user/vote";
+import Results from "./pages/user/Reults";
 
 const router = createBrowserRouter([
     {
@@ -46,6 +49,25 @@ const router = createBrowserRouter([
         path : "/admin/publish-result",
         element:<PublishResult />
     },
+    {
+        path:"/user/dashboard",
+        element:<UserDashboard/>
+    },
+    {
+        path:"/user/voting",
+        element:<Vote/>
+    },
+    {
+        path:"/user/Know-your-voter",
+        element:<KYV/>
+    },
+    {
+        path:"/user/results",
+        element:<Results/>
+    },
+    
+    
+
 
 ])
 
