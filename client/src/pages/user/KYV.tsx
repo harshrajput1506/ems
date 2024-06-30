@@ -44,7 +44,7 @@ const KYV = () => {
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="p-6 bg-white rounded-lg shadow-lg w-96">
-        <h2 className="text-2xl font-bold mb-4">Verify EPIC ID</h2>
+        <h2 className="text-2xl font-bold mb-4">Verify Voter ID</h2>
         {userDetails ? (
           <div className="mt-6">
             <h3 className="text-xl font-bold mb-2">User Details</h3>
