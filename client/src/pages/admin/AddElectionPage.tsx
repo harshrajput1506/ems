@@ -18,17 +18,43 @@ interface Candidates {
   [key: string]: Candidate[];
 }
 
-const ElectionPage: React.FC = () => {
-  const [electionName, setElectionName] = useState<string>('');
-  const [selectedConstituency, setSelectedConstituency] = useState<string>('');
-  const [candidateName, setCandidateName] = useState<string>('');
-  const [partyName, setPartyName] = useState<string>('');
-  const [candidateAge, setCandidateAge] = useState<string>('');
-  const [candidates, setCandidates] = useState<Candidates>({});
-  const [ElectionStartDate, setElectionStartDate] = useState<string>('');
-  const [electionStartTime, setelectionStartTime] = useState<string>('');
-  const [ElectionEndDate, setElectionEndDate] = useState<string>('');
-  const [electionEndTime, setelectionEndTime] = useState<string>('');
+// import React, { useState, useEffect, ChangeEvent } from 'react';
+
+interface ElectionPageProps {
+  electionName?: string;
+  selectedConstituency?: string;
+  candidateName?: string;
+  partyName?: string;
+  candidateAge?: string;
+  candidates?: Candidates;
+  electionStartDate?: string;
+  electionStartTime?: string;
+  electionEndDate?: string;
+  electionEndTime?: string;
+}
+
+const ElectionPage: React.FC<ElectionPageProps> = ({
+  electionName = '',
+  selectedConstituency = '',
+  candidateName = '',
+  partyName = '',
+  candidateAge = '',
+  candidates = {},
+  electionStartDate = '',
+  electionStartTime = '',
+  electionEndDate = '',
+  electionEndTime = ''
+}) => {
+  const [electionNameState, setElectionName] = useState<string>(electionName);
+  const [selectedConstituencyState, setSelectedConstituency] = useState<string>(selectedConstituency);
+  const [candidateNameState, setCandidateName] = useState<string>(candidateName);
+  const [partyNameState, setPartyName] = useState<string>(partyName);
+  const [candidateAgeState, setCandidateAge] = useState<string>(candidateAge);
+  const [candidatesState, setCandidates] = useState<Candidates>(candidates);
+  const [electionStartDateState, setElectionStartDate] = useState<string>(electionStartDate);
+  const [electionStartTimeState, setElectionStartTime] = useState<string>(electionStartTime);
+  const [electionEndDateState, setElectionEndDate] = useState<string>(electionEndDate);
+  const [electionEndTimeState, setElectionEndTime] = useState<string>(electionEndTime);
 
   useEffect(() => {
     if (constituenciesData.length > 0) {
@@ -37,16 +63,16 @@ const ElectionPage: React.FC = () => {
   }, []);
 
   const handleAddCandidate = () => {
-    if (!candidateName || !partyName || !candidateAge) {
+    if (!candidateNameState || !partyNameState || !candidateAgeState) {
       alert("All fields are mandatory!");
       return;
     }
 
     setCandidates(prev => ({
       ...prev,
-      [selectedConstituency]: [
-        ...(prev[selectedConstituency] || []),
-        { name: candidateName, party: partyName, age: candidateAge }
+      [selectedConstituencyState]: [
+        ...(prev[selectedConstituencyState] || []),
+        { name: candidateNameState, party: partyNameState, age: candidateAgeState }
       ]
     }));
     setCandidateName('');
@@ -57,23 +83,23 @@ const ElectionPage: React.FC = () => {
   const handleDeleteCandidate = (index: number) => {
     setCandidates(prev => ({
       ...prev,
-      [selectedConstituency]: prev[selectedConstituency].filter((_, i) => i !== index)
+      [selectedConstituencyState]: prev[selectedConstituencyState].filter((_, i) => i !== index)
     }));
   };
 
   const handleSave = () => {
-    if (!electionName || !ElectionStartDate || !electionStartTime || !electionEndTime) {
+    if (!electionNameState || !electionStartDateState || !electionStartTimeState || !electionEndTimeState) {
       alert("All fields are mandatory!");
       return;
     }
 
     const electionData = {
-      electionName,
-      constituencies: candidates,
-      ElectionStartDate,
-      electionStartTime,
-      electionEndTime,
-      ElectionEndDate
+      electionName: electionNameState,
+      constituencies: candidatesState,
+      electionStartDate: electionStartDateState,
+      electionStartTime: electionStartTimeState,
+      electionEndTime: electionEndTimeState,
+      electionEndDate: electionEndDateState
     };
 
     const jsonString = JSON.stringify(electionData, null, 2);
@@ -91,7 +117,7 @@ const ElectionPage: React.FC = () => {
             <label className="block text-gray-850 font-medium">Election Name</label>
             <input
               type="text"
-              value={electionName}
+              value={electionNameState}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setElectionName(e.target.value)}
               className="mt-1 block p-2 border border-gray-300 rounded-md bg-gray-300 w-64"
             />
@@ -99,15 +125,15 @@ const ElectionPage: React.FC = () => {
           <div className="mb-6">
             <label className="block text-gray-850 font-medium">Select Constituency</label>
             <select
-              value={selectedConstituency}
+              value={selectedConstituencyState}
               onChange={(e: ChangeEvent<HTMLSelectElement>) => setSelectedConstituency(e.target.value)}
               className="block w-64 p-2 border border-gray-300 rounded-md bg-gray-300"
             >
               {constituenciesData.map((constituency: Constituency) => (
-                 <option  value={constituency.name}>
+                <option value={constituency.name}>
                   {constituency.name}
                 </option>
-              ))} 
+              ))}
             </select>
           </div>
 
@@ -116,7 +142,7 @@ const ElectionPage: React.FC = () => {
               <label className="block text-gray-850 font-medium">Candidate Name</label>
               <input
                 type="text"
-                value={candidateName}
+                value={candidateNameState}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setCandidateName(e.target.value)}
                 className="mt-1 block w-56 xl:w-40 lg:w-32 p-2 border border-gray-300 rounded-md bg-gray-300"
               />
@@ -125,7 +151,7 @@ const ElectionPage: React.FC = () => {
               <label className="block text-gray-850 font-medium">Political Party</label>
               <input
                 type="text"
-                value={partyName}
+                value={partyNameState}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setPartyName(e.target.value)}
                 className="mt-1 block w-56 xl:w-40 lg:w-32 p-2 border border-gray-300 rounded-md bg-gray-300"
               />
@@ -134,7 +160,7 @@ const ElectionPage: React.FC = () => {
               <label className="block text-gray-850 font-medium">Age</label>
               <input
                 type="number"
-                value={candidateAge}
+                value={candidateAgeState}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setCandidateAge(e.target.value)}
                 className="mt-1 block w-56 xl:w-40 lg:w-32 p-2 border border-gray-300 rounded-md bg-gray-300"
               />
@@ -148,9 +174,9 @@ const ElectionPage: React.FC = () => {
             </button>
           </div>
 
-          {!candidates[selectedConstituency] ? <div></div> :
+          {!candidatesState[selectedConstituencyState] ? <div></div> :
             <div className="mb-4">
-              <h2 className="text-xl font-bold mb-2">Candidates List for {selectedConstituency}</h2>
+              <h2 className="text-xl font-bold mb-2">Candidates List for {selectedConstituencyState}</h2>
               <table className="min-w-full w-full bg-white text-center">
                 <thead>
                   <tr>
@@ -161,7 +187,7 @@ const ElectionPage: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {(candidates[selectedConstituency] || []).map((candidate, index) => (
+                  {(candidatesState[selectedConstituencyState] || []).map((candidate, index) => (
                     <tr key={index} className="hover:bg-gray-200">
                       <td className="py-2 px-4 border">{candidate.name}</td>
                       <td className="py-2 px-4 border">{candidate.party}</td>
@@ -181,49 +207,48 @@ const ElectionPage: React.FC = () => {
             </div>
           }
 
-          <div className=' flex flex-col lg:flex-row lg:gap-64'>
-          <div className="mb-6 ">
-            <label className="block text-gray-850 font-medium">Election Start Date</label>
-            <input
-              type="date"
-              value={ElectionStartDate}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setElectionStartDate(e.target.value)}
-              className="mt-1 block p-2 border border-gray-300 rounded-md bg-gray-300 w-64"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-850 font-medium">Election Start Time</label>
-            <input
-              type="time"
-              value={electionStartTime}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setelectionStartTime(e.target.value)}
-              className="mt-1 block w-64 p-2 border border-gray-300 rounded-md bg-gray-300"
-            />
-          </div>
-          </div>
-
-          <div className=' flex flex-col lg:flex-row lg:gap-64'>
-          <div className="mb-6 ">
-            <label className="block text-gray-850 font-medium">Election End Date</label>
-            <input
-              type="date"
-              value={ElectionEndDate}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setElectionEndDate(e.target.value)}
-              className="mt-1 block p-2 border border-gray-300 rounded-md bg-gray-300 w-64"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-850 font-medium">Election End Time</label>
-            <input
-              type="time"
-              value={electionEndTime}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setelectionEndTime(e.target.value)}
-              className="mt-1 block w-64 p-2 border border-gray-300 rounded-md bg-gray-300"
-            />
-          </div>
+          <div className='flex flex-col lg:flex-row lg:gap-64'>
+            <div className="mb-6">
+              <label className="block text-gray-850 font-medium">Election Start Date</label>
+              <input
+                type="date"
+                value={electionStartDateState}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setElectionStartDate(e.target.value)}
+                className="mt-1 block p-2 border border-gray-300 rounded-md bg-gray-300 w-64"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-850 font-medium">Election Start Time</label>
+              <input
+                type="time"
+                value={electionStartTimeState}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setElectionStartTime(e.target.value)}
+                className="mt-1 block w-64 p-2 border border-gray-300 rounded-md bg-gray-300"
+              />
+            </div>
           </div>
 
-          
+          <div className='flex flex-col lg:flex-row lg:gap-64'>
+            <div className="mb-6">
+              <label className="block text-gray-850 font-medium">Election End Date</label>
+              <input
+                type="date"
+                value={electionEndDateState}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setElectionEndDate(e.target.value)}
+                className="mt-1 block p-2 border border-gray-300 rounded-md bg-gray-300 w-64"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-850 font-medium">Election End Time</label>
+              <input
+                type="time"
+                value={electionEndTimeState}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setElectionEndTime(e.target.value)}
+                className="mt-1 block w-64 p-2 border border-gray-300 rounded-md bg-gray-300"
+              />
+            </div>
+          </div>
+
           <button
             onClick={handleSave}
             className="px-4 py-2 bg-green-500 text-white rounded-md"

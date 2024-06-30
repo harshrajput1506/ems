@@ -4,7 +4,8 @@ import VoteIcon from "../../assets/images/vote1.svg";
 import Result from '../../assets/images/result.svg'
 import addElectionIcon from "../../assets/images/election-event.svg";
 // import { useLocation } from 'react-router-dom';
-
+const isAdminPath = location.pathname.startsWith('/admin');
+console.log(isAdminPath,'sadsd');
 const adminItems = [
   { name: 'Dashboard', Ref: '/admin/dashboard' , ImgSrc:dashboardIcon  },
   { name: 'Create Election', Ref: '/admin/add-election' , ImgSrc:addElectionIcon  },
@@ -77,7 +78,8 @@ function Sidebar() {
                 <div className="flex items-center my-6 ml-4">
               <span className="font-semibold text-xl">EMS Dashboard</span>
             </div>
-              {location.pathname === "/admin/add-election" || location.pathname === "/admin/publish-result" || location.pathname === "/admin/dashboard" ? (
+            
+              { location.pathname.startsWith('/admin/') ? (
                 <div>
                   {adminItems.map((item) => (
                     <div key={item.name} onClick={() => setSelected(item.name)} className={`flex flex-row items-center justify-start p-4 ${selected === item.name ? 'bg-cyan-900' : 'hover:bg-gray-700'}`}>
@@ -102,13 +104,13 @@ function Sidebar() {
           </div>
         </>
       :
-      <div className= " w-2/12 bg-black text-white p-4 static h-auto ">
+      <div className= "flex-col justify-between flex w-2/12 bg-black text-white p-4 static h-auto ">
         {/* Top Section: Logo & User */}
-        <div className="flex items-center my-6 ml-4">
-          <span className="font-semibold text-xl">EMS Dashboard</span>
-        </div>
+        <div className="flex flex-col   ">
+          <span className="font-semibold text-xl my-6 ml-4 items-center">EMS Dashboard</span>
+        
         <nav className="space-y-6 mt-8">
-          {location.pathname === "/admin/add-election" || location.pathname === "/admin/publish-result" ||  location.pathname === "/admin/dashboard"?
+          {location.pathname.startsWith('/admin/')?
           <div>
               {adminItems.map((item) => (
 
@@ -149,57 +151,61 @@ function Sidebar() {
               ))}
         
         </div>}
-        {/* Navigation Links */}
         
           
 
 
-          {/* <div className="flex flex-row items-center justify-start">
-            <img
-              src={addElectionIcon}
-              alt="election icon"
-              className="h-5, w-5 mr-2"
+         
+        </nav></div>
+      
+      
+        <div className='flex flex-col'>
+        <button className="cursor-pointer group relative flex mb-3 text-center gap-1.5 px-8 py-2 m-2 bg-gray-500 bg-opacity-80 text-[#f1f1f1] rounded-3xl hover:bg-opacity-70 transition font-semibold shadow-md">
+          {/* <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            height="24px"
+            width="24px"
+          >
+            <g strokeWidth={0} id="SVGRepo_bgCarrier" />
+            <g
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              id="SVGRepo_tracerCarrier"
             />
-            <a
-              href="/admin/add-election"
-              className="block text-gray-300 hover:text-white"
-            >
-              Add Election
-            </a>
+            <g id="SVGRepo_iconCarrier">
+              {" "}
+              <g id="Interface / Download">
+                {" "}
+                <path
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                  strokeWidth={2}
+                  stroke="#f1f1f1"
+                  d="M6 21H18M12 3V17M12 17L17 12M12 17L7 12"
+                  id="Vector"
+                />{" "}
+              </g>{" "}
+            </g>
+          </svg> */}
+          Logout
+          
+        </button>
+        <a className='flex flex-row border-t-2 hover:bg-gray-70 cursor-pointer pt-4 mt-4 space-y-2 font-medium border-t border-gray-200 '
+           href='/user/profile'>
+          <div className="mt-1 relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600 ">
+              <svg className="absolute w-12 h-12 text-gray-400 -left-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
           </div>
-
-          <div className="flex flex-row items-center justify-start">
-            <img
-              src={addElectionIcon}
-              alt="election icon"
-              className="h-5, w-5 mr-2"
-            />
-            <a
-              href="/admin/add-election"
-              className="block text-gray-300 hover:text-white"
-            >
-              Voting Result
-            </a>
+          <div className='m-4 text-bold text-xl'>
+          {` User`}
           </div>
+          </a>
+        
 
-          <div className="flex flex-row items-center justify-start">
-            <img
-              src={addElectionIcon}
-              alt="election icon"
-              className="h-5, w-5 mr-2"
-            />
-            <a
-              href="/admin/add-election"
-              className="block text-gray-300 hover:text-white"
-            >
-              Publish Result
-            </a>
-          </div> */}
 
-          {/* <a href="/results" className="block text-gray-300 hover:text-white">results</a> */}
-          {/* ... add more links as needed ... */}
-        </nav>
-      </div>}
+        </div>
+        </div>}
 
       </>
     );

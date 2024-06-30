@@ -1,25 +1,41 @@
 [
-    {
-      "electionId": "1",
-      "name": "Election 1",
-      "constituency": "Constituency 1",
-      "candidates": [
-        { "name": "Candidate 1", "party": "Party A" },
-        { "name": "Candidate 2", "party": "Party B" }
-      ],
-      "startDate": "2024-01-01T08:00:00Z",
-      "endDate": "2024-12-12T18:00:00Z"
-    },
-    {
-      "electionId": "2",
-      "name": "Election 2",
-      "constituency": "Constituency 2",
-      "candidates": [
-        { "name": "Candidate 3", "party": "Party C" },
-        { "name": "Candidate 4", "party": "Party D" }
-      ],
-      "startDate": "2024-01-01T08:00:00Z",
-      "endDate": "2024-12-12T18:00:00Z"
-    }
-  ]
-  
+  {
+    "electionId": "1",
+    "name": "Election 1",
+    "electionDetails": [
+      {
+        "constituency": "Constituency 1",
+        "candidates": [
+          { "name": "Candidate 1", "party": "Party A" },
+          { "name": "Candidate 2", "party": "Party B" }
+        ],
+        "startDate": "2024-01-01T08:00:00Z",
+        "endDate": "2024-12-12T18:00:00Z"
+      },
+      {
+        "constituency": "Constituency 2",
+        "candidates": [
+          { "name": "Candidate 3", "party": "Party C" },
+          { "name": "Candidate 4", "party": "Party D" }
+        ],
+        "startDate": "2024-01-01T08:00:00Z",
+        "endDate": "2024-12-12T18:00:00Z"
+      }
+    ]
+  },
+  {
+    "electionId": "5",
+    "name": "Election 2",
+    "electionDetails": [
+      {
+        "constituency": "Constituency 3",
+        "candidates": [
+          { "name": "Candidate 5", "party": "Party E" },
+          { "name": "Candidate 6", "party": "Party F" }
+        ],
+        "startDate": "2024-01-01T08:00:00Z",
+        "endDate": "2024-12-12T18:00:00Z"
+      }
+    ]
+  }
+]
