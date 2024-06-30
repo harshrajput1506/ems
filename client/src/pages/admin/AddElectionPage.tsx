@@ -248,13 +248,20 @@ const ElectionPage: React.FC<ElectionPageProps> = ({
               />
             </div>
           </div>
-
+          <div className='flex flex-col lg:flex-row lg:gap-96 '>
           <button
             onClick={handleSave}
-            className="px-4 py-2 bg-green-500 text-white rounded-md"
+            className="px-4 py-2 bg-green-500 text-white rounded-md ml-5"
           >
             Save Election
           </button>
+          <button
+            // onClick={handleSave}
+            className="px-4 py-2 bg-cyan-500 text-white rounded-md mr-5"
+          >
+            Publish Election
+          </button>
+          </div>
         </div>
       </div>
     </div>
