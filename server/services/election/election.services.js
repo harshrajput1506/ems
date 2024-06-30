@@ -145,10 +145,11 @@ const getCandidatesByConsistuency = async (consistuencyName) => {
   }
 };
 
-const getElections = async () => {
+const getAllElections = async () => {
+  console.log("Geting all elections");
   try {
-    const candidates = await prisma.elections.findMany();
-    return candidates;
+    const elections = await prisma.elections.findMany();
+    return elections;
   } catch (error) {
     throw error;
   }
@@ -163,4 +164,5 @@ module.exports = {
   updateElectionByStatus,
   deleteElection,
   getCandidatesByConsistuency,
+  getAllElections,
 };
