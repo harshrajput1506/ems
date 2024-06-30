@@ -1,0 +1,17 @@
+[
+    {
+      "epicId": "123456",
+      "name": "John Doe",
+      "age": 30,
+      "constituency": "Constituency A",
+      "address": "123 Main St"
+    },
+    {
+      "epicId": "654321",
+      "name": "Jane Smith",
+      "age": 25,
+      "constituency": "Constituency B",
+      "address": "456 Elm St"
+    }
+  ]
+  

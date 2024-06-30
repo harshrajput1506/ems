@@ -3,7 +3,7 @@ import AdminLogin from "./AdminLogin";
 import AdminDashboard from "./AdminDashboard";
 import ElectionPage from "./ElectionPage";
 import AddElection from "./AddElectionPage.jsx";
-import PublishResult from "./PublishResult.jsx";
+import PublishResult from "./PublishResult.js";
 
 // import Admin from './pages/admin/Admin.tsx'
 
