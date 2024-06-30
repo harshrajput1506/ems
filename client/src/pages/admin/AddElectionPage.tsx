@@ -2,7 +2,7 @@ import Hello from '@/components/ui/hello'
 // import VotingPage from '@/components/ui/VotingPage'
 import Sidebar from "../../components/ui/Sidebar";
 import React, { useState, useEffect, ChangeEvent } from 'react';
-import constituenciesData from 'C:/Users/user/Desktop/ems/server/src/ac/delhi_constituencies.json';
+import constituenciesData from '../../../../server/src/ac/delhi_constituencies.json';
 
 interface Candidate {
   name: string;

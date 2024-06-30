@@ -145,6 +145,15 @@ const getCandidatesByConsistuency = async (consistuencyName) => {
   }
 }
 
+const getElections = async () => {
+  try {
+    const candidates = await prisma.elections.findMany();
+    return candidates;
+  } catch (error) {
+    throw error
+  }
+}
+
 
 module.exports = {
   createNewElection, 
