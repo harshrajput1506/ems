@@ -11,6 +11,8 @@ import UserDashboard from "./pages/user/UserDashboard";
 import KYV from "./pages/user/KYV";
 import Vote from "./pages/user/vote";
 import Results from "./pages/user/Reults";
+import UserProfile from "./pages/user/profile";
+import CurrentElectionPage from './pages/admin/currentElection'
 
 const router = createBrowserRouter([
     {
@@ -42,6 +44,10 @@ const router = createBrowserRouter([
         element:<ElectionPage />
     },
     {
+        path:"/admin/current-election/:electionId",
+        element:<CurrentElectionPage />
+    },
+    {
         path : "/admin/add-election",
         element:<AddElection />
     },
@@ -52,6 +58,10 @@ const router = createBrowserRouter([
     {
         path:"/user/dashboard",
         element:<UserDashboard/>
+    },
+    {
+        path:"/user/profile",
+        element:<UserProfile/>
     },
     {
         path:"/user/voting",

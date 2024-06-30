@@ -26,6 +26,7 @@ interface Election {
 function AdminDashboard() {
   const [currentElections, setCurrentElections] = useState<Election[]>([]);
   const [upcomingElections, setUpcomingElections] = useState<Election[]>([]);
+  const [pendingElections, setPendingElections] = useState<Election[]>([]);
   // const [showCreateElection, setShowCreateElection] = useState(false);
 
   {
@@ -137,7 +138,7 @@ function AdminDashboard() {
                       </div>
                       <div className="p-2">
 
-                        <a href={`/admin/dashboard/${election.id}`} className="bg-white p-1 px-4 rounded-lg">view</a>
+                        <a href={`/admin/current-election/${election.id}`} className="bg-white p-1 px-4 rounded-lg">view</a>
 
 
                       </div>
@@ -159,6 +160,28 @@ function AdminDashboard() {
                       <div className="p-2">
 
                         <Link to={`/admin/dashboard/${election.id}`} className="bg-white p-1 px-4 rounded-lg">view</Link>
+
+
+                      </div>
+                    </div>
+                  ))
+                }</div>
+            </div>
+
+            <div>
+              <h1 className="mb-4 ml-1">Pending Elections</h1>
+              <div className="grid grid-cols-1 bg-slate-100 p-3 rounded-md shadow-lg">
+                {
+                  upcomingElections.map((election) => (
+                    <div className="p-1 flex m-2">
+
+                      <div className="flex flex-col justify-around">
+                        <div className="text-md font-medium">{election.title}</div>
+                        <div className="text-sm font-light">{election.startdate}</div>
+                      </div>
+                      <div className="p-2">
+
+                        <Link to={`/admin/add-election`} className="bg-white p-1 px-4 rounded-lg">view</Link>
 
 
                       </div>
