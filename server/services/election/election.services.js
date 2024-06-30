@@ -45,7 +45,8 @@ const addNewCandidate = async (data) => {
   }
 };
 
-const updateElectionAllData = async (data) => {
+const updateElectionAllData = async (electionId, data) => {
+  console.log("Election ID:", electionId);
   try {
     // Update the election
     const electionId = data.electionId;
@@ -66,7 +67,6 @@ const updateElectionAllData = async (data) => {
     throw error;
   }
 };
-
 const updateElectionByStatus = async (data) => {
   try {
     // Update the election by status

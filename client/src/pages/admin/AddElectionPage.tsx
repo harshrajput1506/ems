@@ -115,15 +115,6 @@ const ElectionPage: React.FC<ElectionPageProps> = ({
     setCandidateAge("");
   };
 
-  const handleDeleteCandidate = (index: number) => {
-    setCandidates((prev) => ({
-      ...prev,
-      [selectedConstituencyState]: prev[selectedConstituencyState].filter(
-        (_, i) => i !== index
-      ),
-    }));
-  };
-
   const handleSave = async () => {
     if (
       !electionNameState ||
@@ -144,22 +135,20 @@ const ElectionPage: React.FC<ElectionPageProps> = ({
       electionEndDate: electionEndDateState,
     };
 
+    const jsonString = JSON.stringify(electionData, null, 2);
+    localStorage.setItem("electionData", jsonString);
+
     try {
       const response = await axios.post(
         "http://localhost:8000/api/v1/admin/election",
         electionData
       );
       console.log("Election created:", response.data);
-
-      const jsonString = JSON.stringify(electionData, null, 2);
-      localStorage.setItem("electionData", jsonString);
-
       setShowDialog(true);
     } catch (error) {
       console.error("Error creating election:", error);
       setError("Failed to create election. Please try again.");
     }
-    1;
   };
 
   return (
@@ -200,92 +189,6 @@ const ElectionPage: React.FC<ElectionPageProps> = ({
               ))}
             </select>
           </div>
-
-          <div className="flex flex-col lg:flex-row 2xl:gap-28 xl:gap-20 lg:gap-12 m-1">
-            <div className="mb-4">
-              <label className="block text-gray-850 font-medium">
-                Candidate Name
-              </label>
-              <input
-                type="text"
-                value={candidateNameState}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setCandidateName(e.target.value)
-                }
-                className="mt-1 block w-56 xl:w-40 lg:w-32 p-2 border border-gray-300 rounded-md bg-gray-300"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-850 font-medium">
-                Political Party
-              </label>
-              <input
-                type="text"
-                value={partyNameState}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setPartyName(e.target.value)
-                }
-                className="mt-1 block w-56 xl:w-40 lg:w-32 p-2 border border-gray-300 rounded-md bg-gray-300"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-850 font-medium">Age</label>
-              <input
-                type="number"
-                value={candidateAgeState}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setCandidateAge(e.target.value)
-                }
-                className="mt-1 block w-56 xl:w-40 lg:w-32 p-2 border border-gray-300 rounded-md bg-gray-300"
-              />
-            </div>
-
-            <button
-              onClick={handleAddCandidate}
-              className="m-6 px-4 py-2 bg-lime-500 text-white rounded-md"
-            >
-              Add Candidate
-            </button>
-          </div>
-
-          {!candidatesState[selectedConstituencyState] ? (
-            <div></div>
-          ) : (
-            <div className="mb-4">
-              <h2 className="text-xl font-bold mb-2">
-                Candidates List for {selectedConstituencyState}
-              </h2>
-              <table className="min-w-full w-full bg-white text-center">
-                <thead>
-                  <tr>
-                    <th className="py-2">Name</th>
-                    <th className="py-2">Party</th>
-                    <th className="py-2">Age</th>
-                    <th className="py-2">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {(candidatesState[selectedConstituencyState] || []).map(
-                    (candidate, index) => (
-                      <tr key={index} className="hover:bg-gray-200">
-                        <td className="py-2 px-4 border">{candidate.name}</td>
-                        <td className="py-2 px-4 border">{candidate.party}</td>
-                        <td className="py-2 px-4 border">{candidate.age}</td>
-                        <td className="py-2 px-4 border">
-                          <button
-                            onClick={() => handleDeleteCandidate(index)}
-                            className="text-red-500"
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    )
-                  )}
-                </tbody>
-              </table>
-            </div>
-          )}
 
           <div className="flex flex-col lg:flex-row lg:gap-64">
             <div className="mb-6">
@@ -349,12 +252,12 @@ const ElectionPage: React.FC<ElectionPageProps> = ({
               onClick={handleSave}
               className="px-4 py-2 bg-green-500 text-white rounded-md ml-5"
             >
-              Save Election
+              Create Election
             </button>
             {showDialog && (
               <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
                 <div className="bg-white p-6 rounded shadow-md text-center">
-                  <h2 className="text-2xl font-bold mb-4">Election Saved</h2>
+                  <h2 className="text-2xl font-bold mb-4">Election Created</h2>
                   <button
                     onClick={() => setShowDialog(false)}
                     className="px-4 py-2 bg-blue-500 text-white rounded-md"
@@ -364,12 +267,6 @@ const ElectionPage: React.FC<ElectionPageProps> = ({
                 </div>
               </div>
             )}
-            <button
-              // onClick={handleSave}
-              className="px-4 py-2 bg-cyan-500 text-white rounded-md mr-5"
-            >
-              Publish Election
-            </button>
           </div>
         </div>
       </div>
