@@ -1,13 +1,14 @@
-require('dotenv').config()
-const express = require('express')
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
 
-const app = express()
+const app = express();
 
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
-app.use('/api/v1/', require('./routes/routes'))
-
+app.use("/api/v1/", require("./routes/routes"));
 
 //Handle Errors
 app.use((req, res, next) => {
@@ -20,13 +21,13 @@ app.use((error, req, res, next) => {
   res.json({
     success: 0,
     error: {
-      message: error.message
-    }
-  })
+      message: error.message,
+    },
+  });
 });
-  
 
-const port = process.env.APP_PORT || 3000
+const port = process.env.APP_PORT || 8000;
 app.listen(port, () => {
-    console.log("Server up and running on port",port)
-})
+  console.log("Server up and running on port", port);
+});
+

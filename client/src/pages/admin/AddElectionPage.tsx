@@ -2,6 +2,7 @@ import Hello from "@/components/ui/hello";
 import Sidebar from "../../components/ui/Sidebar";
 import React, { useState, useEffect, ChangeEvent } from "react";
 import constituenciesData from "../../../../server/src/ac/delhi_constituencies.json";
+import axios from "axios";
 
 interface Candidate {
   name: string;
@@ -59,6 +60,7 @@ const ElectionPage: React.FC<ElectionPageProps> = ({
   const [electionEndTimeState, setElectionEndTime] =
     useState<string>(electionEndTime);
   const [showDialog, setShowDialog] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (constituenciesData.length > 0) {
@@ -122,7 +124,7 @@ const ElectionPage: React.FC<ElectionPageProps> = ({
     }));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (
       !electionNameState ||
       !electionStartDateState ||
@@ -142,11 +144,21 @@ const ElectionPage: React.FC<ElectionPageProps> = ({
       electionEndDate: electionEndDateState,
     };
 
-    const jsonString = JSON.stringify(electionData, null, 2);
-    console.log(jsonString);
-    localStorage.setItem("electionData", jsonString);
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/admin/election",
+        electionData
+      );
+      console.log("Election created:", response.data);
 
-    setShowDialog(true);
+      const jsonString = JSON.stringify(electionData, null, 2);
+      localStorage.setItem("electionData", jsonString);
+
+      setShowDialog(true);
+    } catch (error) {
+      console.error("Error creating election:", error);
+      setError("Failed to create election. Please try again.");
+    }
     1;
   };
 
