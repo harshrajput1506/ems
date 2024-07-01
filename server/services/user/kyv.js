@@ -1,5 +1,4 @@
 const { prisma } = require("../../config/database")
-const { use } = require("../../routes/routes")
 
 const verifyVoterId = async (data) => {
     try {
@@ -20,7 +19,7 @@ const verifyVoterId = async (data) => {
         }
 
         const user = await prisma.user.findUnique({
-            where:{uid:userId}
+            where:{uid:parseInt(userId)}
         })
 
         if(!user){
@@ -32,7 +31,7 @@ const verifyVoterId = async (data) => {
                 voter_card_number:voterData.voter_card_number,
                 address:voterData.address,
                 constituent_assembly:voterData.consistuency_assembly,
-                userId:userId
+                userId:parseInt(userId)
             }
         })
 
@@ -46,7 +45,7 @@ const verifyVoterId = async (data) => {
 const checkUserKYV = async (userId) => {
     try {
         const userKYV = await  prisma.kYV.findUnique({
-            where:{userId:userId}
+            where:{userId:parseInt(userId)}
         })
         return userKYV
     } catch (error) {

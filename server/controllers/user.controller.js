@@ -10,7 +10,6 @@ const userVote = (req, res) => {
               message: "No election found",
             });
           }
-    
           return res.status(200).json({
             status: "1",
             message: "Voted",
@@ -27,7 +26,7 @@ const userVote = (req, res) => {
 };
 
 const getUserByUserId = (req, res) => {
-    getUser(req.param.id)
+    getUser(req.params.id)
       .then((user) => {
           if (!user) {
               return res.status(401).json({

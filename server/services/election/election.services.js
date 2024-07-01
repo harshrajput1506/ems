@@ -33,7 +33,7 @@ const addNewCandidate = async (data) => {
         consistuency: data.consistuency,
         election: {
           connect: {
-            id: data.electionId,
+            id: parseInt(data.electionId),
           },
         },
       },
@@ -57,7 +57,7 @@ const updateElectionAllData = async (electionId, data) => {
       enddate: data.enddate,
     };
     const updatedElection = await prisma.elections.update({
-      where: { id: electionId },
+      where: { id: parseInt(electionId) },
       data: updateData,
     });
 
@@ -72,7 +72,7 @@ const updateElectionByStatus = async (data) => {
     // Update the election by status
     const electionId = data.electionId;
     const updatedElection = await prisma.elections.update({
-      where: { id: electionId },
+      where: { id: parseInt(electionId) },
       data: {
         status: data.status,
       },
@@ -88,7 +88,7 @@ const updateElectionByStatus = async (data) => {
 const deleteElection = async (electionId) => {
   try {
     const deletedElection = await prisma.elections.delete({
-      where: { id: electionId },
+      where: { id: parseInt(electionId) },
     });
     return deletedElection;
   } catch (error) {
@@ -103,7 +103,7 @@ const updateCandidate = async (data) => {
       where: { id: data.candidateId },
       data: {
         name: data.name,
-        age: data.age,
+        age: parseInt(data.age),
         political_party: data.political_party,
         consistuency: data.consistuency,
       },
@@ -122,7 +122,7 @@ const deleteCandidateById = async (candidateId) => {
   try {
     // Delete the candidate
     const deletedCandidate = await prisma.candidates.delete({
-      where: { id: candidateId },
+      where: { id: parseInt(candidateId) },
     });
 
     console.log("Candidate deleted:", deletedCandidate);
@@ -137,7 +137,7 @@ const publishElection = async (electionId) => {
   try {
     // Delete the candidate
     const updateElection = await prisma.elections.update({
-      where: { id: electionId },
+      where: { id: parseInt(electionId) },
       data: {
         result_status:"Published"
       }
@@ -186,7 +186,7 @@ const getElectionByIdService = async (electionId) => {
     const elections = await prisma.elections.findMany(
       {
         where:{
-          id: electionId
+          id: parseInt(electionId)
         },
         include:{
           candidates:true

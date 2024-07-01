@@ -1,12 +1,11 @@
 const { prisma } = require("../../config/database");
-const { use } = require("../../routes/routes");
 
 const userVoteByElectionId = async (data) => {
   try {
     const { userId, electionId, candidateId, consituency } = data;
     const userKYV = await prisma.kYV.findUnique({
       where:{
-        userId:userId
+        userId:parseInt(userId)
       }
     });
     if(!userKYV) {
@@ -16,13 +15,13 @@ const userVoteByElectionId = async (data) => {
         throw new Error("User cannot vote")
     }
     const candidate = await prisma.candidates.findUnique({
-        where: { id: candidateId },
+        where: { id: parseInt(candidateId) },
     });
     if(!candidate) {
         throw new Error("Invalid Candidate Id")
     }
     const updatedCandidate = await prisma.candidates.update({
-        where: { id: candidateId },
+        where: { id: parseInt(candidateId) },
         data: { votes: candidate.votes + 1 },
     });
     return updatedCandidate
@@ -35,7 +34,7 @@ const userVoteByElectionId = async (data) => {
 const getUser = async (userId) => {
     try {
         const user = await prisma.user.findUnique({
-            where:{uid:userId},
+            where:{uid:parseInt(userId)},
         })
         return user
     } catch (error) {

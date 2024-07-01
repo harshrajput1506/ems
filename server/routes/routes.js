@@ -38,7 +38,7 @@ router.post("/admin/election/publish", verifyJwt ,publishElectionResult)
 
 
 router.post("/user/vote",verifyJwt ,userVote)
-router.get("/user:id", verifyJwt,getUserByUserId)
+router.get("/user/:id", verifyJwt,getUserByUserId)
 router.get("/user/kyv/isVerify",verifyJwt,checkUserVerification)
 router.post("/user/kyv/verify", verifyJwt ,userVoterVerification)
 
