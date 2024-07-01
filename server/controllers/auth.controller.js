@@ -1,4 +1,5 @@
-const { sendLoginOtp, loginByOtp } = require("../services/auth/login");
+const { generateToken } = require("../middlewares/jwt");
+const { sendLoginOtp, loginByOtp, adminLogin } = require("../services/auth/login");
 const { registerUser } = require("../services/auth/register");
 const { generateOtp } = require("../services/auth/sandbox");
 
@@ -9,21 +10,22 @@ const test = (req, res) => {
   });
 };
 
-const regsiter = (req, res) => {
+const regsiter = async (req, res) => {
   const body = req.body;
   registerUser(body)
-    .then((user) => {
+    .then( async (user) => {
       if (!user) {
         return res.status(404).json({
           status: "0",
           message: "Created user not found, something went wrong",
         });
       }
-
+      const token = await generateToken({uid:user.uid, number:user.number})
       return res.status(200).json({
         status: "0",
         message: "User Registered",
         data: user,
+        token: token
       });
     })
     .catch((error) => {
@@ -98,10 +100,13 @@ const loginOtp = (req, res) => {
 
 const loginVerifyOtp = (req, res) => {
     const {number, otp} = req.body
-    loginByOtp(number, otp).then( user => {
+    loginByOtp(number, otp).then(async (user) => {
+      const token = await generateToken({uid:user.uid, number:user.number})
         return res.status(200).json({
             status: "1",
-            data:user
+            message:"Login Successfull",
+            data:user,
+            token:token
         })
     }).catch( error => {
         console.log('Error verifying OTP and logging in:', error);
@@ -126,4 +131,32 @@ const loginVerifyOtp = (req, res) => {
 
 }
 
-module.exports = { test, regsiter, sendAadharOtp, loginOtp, loginVerifyOtp };
+const loginAsAdmin = (req, res) => {
+  adminLogin(req.body).then( token => {
+    if(!token) {
+      return res.status(401).json({ 
+        status:"0",
+        message:"Unauthorised"
+      });
+    }
+    return res.status(200).json({ 
+      status:"1",
+      message:"Admin LoggedIn",
+      token: token
+    });
+
+  }).catch(error => {
+    if(error.message === "Invalid Admin Credentials"){
+      return res.status(403).json({ 
+        status:"0",
+        message: error.message 
+      });
+    }
+    return res.status(500).json({ 
+      status:"0",
+      message: 'Internal server error' 
+    });
+  })
+}
+
+module.exports = { test, regsiter, sendAadharOtp, loginOtp, loginVerifyOtp, loginAsAdmin };

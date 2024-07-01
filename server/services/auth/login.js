@@ -1,6 +1,7 @@
 require("dotenv").config();
 const axios = require("axios");
 const { prisma } = require("../../config/database");
+const { generateToken } = require("../../middlewares/jwt");
 
 const sendLoginOtp = async (number) => {
   try {
@@ -96,4 +97,19 @@ const verifyOtp = async (number, otp) => {
 
 }
 
-module.exports = { sendLoginOtp, loginByOtp };
+const adminLogin = async (data) => {
+  try {
+    const {email, password} = data
+    const adminEmail = process.env.ADMIN_EMAIL
+    const adminPassword = process.env.ADMIN_PASSWORD
+
+    if(adminEmail === email && adminPassword === password){
+      return await generateToken({id:"admin", number:email})
+    }
+    throw new Error("Invalid Admin Credentials")
+  } catch (error) {
+    throw error
+  }
+}
+
+module.exports = { sendLoginOtp, loginByOtp, adminLogin };
