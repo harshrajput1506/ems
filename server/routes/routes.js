@@ -25,7 +25,7 @@ router.post("/auth/regsiter", regsiter);
 router.post("/auth/aadharOtp", sendAadharOtp);
 router.post("/auth/loginOtp", loginOtp);
 router.post("/auth/login", loginVerifyOtp);
-router.post("auth/admin/login", loginAsAdmin)
+router.post("/auth/admin/login", loginAsAdmin)
 
 router.post("/admin/election", verifyJwt,createElection);
 router.post("/admin/candidate", verifyJwt,addCandidate);
