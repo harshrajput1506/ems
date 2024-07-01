@@ -11,11 +11,11 @@ const {
   deleteCandidate,
   updateElection,
   getElections,
+  getElectionById,
+  getCandidates,
+  publishElectionResult,
 } = require("../controllers/election.controller");
-const {
-  getCandidatesByConsistuency,
-} = require("../services/election/election.services");
-
+const { userVote, getUserByUserId, checkUserVerification, userVoterVerification } = require("../controllers/user.controller");
 const router = require("express").Router();
 
 router.get("/test", test);
@@ -24,12 +24,21 @@ router.post("/auth/aadharOtp", sendAadharOtp);
 router.post("/auth/loginOtp", loginOtp);
 router.post("/auth/login", loginVerifyOtp);
 
+
 router.post("/admin/election", createElection);
 router.post("/admin/candidate", addCandidate);
 router.delete("/admin/candidate", deleteCandidate);
 router.patch("/admin/election/:id", updateElection);
-router.get("/election/candidate", getCandidatesByConsistuency);
-router.get("/admin/elections", getElections);
+router.get("/election/candidate", getCandidates);
+router.get("/elections", getElections);
+router.get("/election/:id", getElectionById);
+router.post("/admin/election/publish", publishElectionResult)
+
+
+router.post("/user/vote", userVote)
+router.get("/user:id", getUserByUserId)
+router.get("/user/kyv/isVerify", checkUserVerification)
+router.post("/user/kyv/verify", userVoterVerification)
 
 module.exports = router;
 

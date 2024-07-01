@@ -6,6 +6,8 @@ const {
   updateElectionByStatus,
   getAllElections,
   updateElectionAllData,
+  getElectionByIdService,
+  publishElection,
 } = require("../services/election/election.services");
 
 const createElection = (req, res) => {
@@ -32,6 +34,7 @@ const createElection = (req, res) => {
       });
     });
 };
+
 
 const addCandidate = (req, res) => {
   addNewCandidate(req.body)
@@ -157,6 +160,58 @@ const updateElection = (req, res) => {
     });
 };
 
+const publishElectionResult = (req, res) => {
+  const electionId = req.body.id;
+  publishElection(electionId)
+    .then((election) => {
+      if (!election) {
+        return res.status(401).json({
+          status: "0",
+          message: "No election found",
+        });
+      }
+
+      return res.status(200).json({
+        status: "1",
+        message: "Election result published",
+        data: election,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(501).json({
+        status: "0",
+        message: "Internal server error",
+      });
+    });
+};
+
+const getElectionById = (req, res) => {
+  const electionId = req.params.id;
+  getElectionByIdService(electionId)
+    .then((election) => {
+      if (!election) {
+        return res.status(401).json({
+          status: "0",
+          message: "No election found",
+        });
+      }
+
+      return res.status(200).json({
+        status: "1",
+        message: "Election Data",
+        data: election,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(501).json({
+        status: "0",
+        message: "Internal server error",
+      });
+    });
+};
+
 module.exports = {
   createElection,
   addCandidate,
@@ -164,5 +219,7 @@ module.exports = {
   deleteCandidate,
   updateElection,
   getElections,
+  getElectionById,
+  publishElectionResult
 };
 

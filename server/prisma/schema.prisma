@@ -67,4 +67,5 @@ model Elections {
   startdate DateTime
   enddate DateTime
   candidates Candidates[]
+  result_status String @default("Pending") // Pending, Published
 }

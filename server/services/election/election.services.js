@@ -117,6 +117,7 @@ const updateCandidate = async (data) => {
   }
 };
 
+
 const deleteCandidateById = async (candidateId) => {
   try {
     // Delete the candidate
@@ -126,6 +127,24 @@ const deleteCandidateById = async (candidateId) => {
 
     console.log("Candidate deleted:", deletedCandidate);
     return deletedCandidate;
+  } catch (error) {
+    console.error("Error deleting candidate:", error);
+    throw error;
+  }
+};
+
+const publishElection = async (electionId) => {
+  try {
+    // Delete the candidate
+    const updateElection = await prisma.elections.update({
+      where: { id: electionId },
+      data: {
+        result_status:"Published"
+      }
+    });
+
+    console.log("Election published:", updateElection);
+    return updateElection;
   } catch (error) {
     console.error("Error deleting candidate:", error);
     throw error;
@@ -148,7 +167,32 @@ const getCandidatesByConsistuency = async (consistuencyName) => {
 const getAllElections = async () => {
   console.log("Geting all elections");
   try {
-    const elections = await prisma.elections.findMany();
+    const elections = await prisma.elections.findMany(
+      {
+        include:{
+          candidates:false
+        }
+      }
+    );
+    return elections;
+  } catch (error) {
+    throw error;
+  }
+};  
+
+const getElectionByIdService = async (electionId) => {
+  console.log("Geting all elections");
+  try {
+    const elections = await prisma.elections.findMany(
+      {
+        where:{
+          id: electionId
+        },
+        include:{
+          candidates:true
+        }
+      }
+    );
     return elections;
   } catch (error) {
     throw error;
@@ -165,4 +209,6 @@ module.exports = {
   deleteElection,
   getCandidatesByConsistuency,
   getAllElections,
+  getElectionByIdService,
+  publishElection
 };
