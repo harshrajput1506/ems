@@ -104,7 +104,7 @@ const adminLogin = async (data) => {
     const adminPassword = process.env.ADMIN_PASSWORD
 
     if(adminEmail === email && adminPassword === password){
-      return await generateToken({id:"admin", number:email})
+      return await generateToken({uid:"admin", number:email})
     }
     throw new Error("Invalid Admin Credentials")
   } catch (error) {
