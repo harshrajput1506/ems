@@ -2,7 +2,7 @@ const {
   createNewElection,
   addNewCandidate,
   getCandidatesByConsistuency,
-  deleteCandidateById,
+  deleteCandidateByCriteria,
   updateElectionByStatus,
   getAllElections,
   updateElectionAllData,
@@ -34,7 +34,6 @@ const createElection = (req, res) => {
       });
     });
 };
-
 
 const addCandidate = (req, res) => {
   addNewCandidate(req.body)
@@ -89,7 +88,7 @@ const getCandidates = (req, res) => {
 const getElections = (req, res) => {
   getAllElections()
     .then((elections) => {
-      if (!elections) {
+      if (!elections.length) {
         return res.status(401).json({
           status: "0",
           message: "No election found",
@@ -110,28 +109,36 @@ const getElections = (req, res) => {
     });
 };
 
-const deleteCandidate = (req, res) => {
-  deleteCandidateById(req.body.candidateId)
-    .then((candidate) => {
-      if (!candidate) {
-        return res.status(401).json({
-          status: "0",
-          message: "No candidate found",
-        });
-      }
+const deleteCandidate = async (req, res) => {
+  const { name, party, age, constituency } = req.body;
 
-      return res.status(200).json({
-        status: "1",
-        message: "Candidate Deleted",
-      });
-    })
-    .catch((error) => {
-      console.log(error);
-      res.status(501).json({
+  try {
+    const deletedCandidate = await deleteCandidateByCriteria(
+      name,
+      party,
+      age,
+      constituency,
+    );
+
+    if (!deletedCandidate) {
+      return res.status(404).json({
         status: "0",
-        message: "Internal server error",
+        message: "No candidate found with the provided criteria",
       });
+    }
+
+    return res.status(200).json({
+      status: "1",
+      message: "Candidate Deleted",
     });
+  } catch (error) {
+    console.error("Error deleting candidate:", error);
+    return res.status(500).json({
+      status: "0",
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
 };
 
 const updateElection = (req, res) => {
@@ -208,6 +215,7 @@ const getElectionById = (req, res) => {
       res.status(501).json({
         status: "0",
         message: "Internal server error",
+        error: error,
       });
     });
 };
@@ -220,6 +228,5 @@ module.exports = {
   updateElection,
   getElections,
   getElectionById,
-  publishElectionResult
+  publishElectionResult,
 };
-

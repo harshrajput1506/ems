@@ -120,19 +120,25 @@ const ElectionPage: React.FC<ElectionPageProps> = ({
       !electionNameState ||
       !electionStartDateState ||
       !electionStartTimeState ||
+      !electionEndDateState ||
       !electionEndTimeState
     ) {
       alert("All fields are mandatory!");
       return;
     }
 
+    // Combine date and time into a single DateTime object
+    const startdate = new Date(
+      `${electionStartDateState}T${electionStartTimeState}`,
+    ).toISOString();
+    const enddate = new Date(
+      `${electionEndDateState}T${electionEndTimeState}`,
+    ).toISOString();
+
     const electionData = {
-      electionName: electionNameState,
-      constituencies: candidatesState,
-      electionStartDate: electionStartDateState,
-      electionStartTime: electionStartTimeState,
-      electionEndTime: electionEndTimeState,
-      electionEndDate: electionEndDateState,
+      title: electionNameState,
+      startdate: startdate,
+      enddate: enddate,
     };
 
     const jsonString = JSON.stringify(electionData, null, 2);
@@ -141,7 +147,7 @@ const ElectionPage: React.FC<ElectionPageProps> = ({
     try {
       const response = await axios.post(
         "http://localhost:8000/api/v1/admin/election",
-        electionData
+        electionData,
       );
       console.log("Election created:", response.data);
       setShowDialog(true);
@@ -150,7 +156,6 @@ const ElectionPage: React.FC<ElectionPageProps> = ({
       setError("Failed to create election. Please try again.");
     }
   };
-
   return (
     <div className="min-h-screen overflow-x-hidden flex flex-col lg:flex-row bg-slate-50">
       <Sidebar />
