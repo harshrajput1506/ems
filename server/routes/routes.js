@@ -10,6 +10,7 @@ const {
   addCandidate,
   deleteCandidate,
   updateElection,
+  getElections,
 } = require("../controllers/election.controller");
 const {
   getCandidatesByConsistuency,
@@ -28,6 +29,7 @@ router.post("/admin/candidate", addCandidate);
 router.delete("/admin/candidate", deleteCandidate);
 router.patch("/admin/election/:id", updateElection);
 router.get("/election/candidate", getCandidatesByConsistuency);
+router.get("/admin/elections", getElections);
 
 module.exports = router;
 

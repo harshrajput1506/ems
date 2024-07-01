@@ -4,6 +4,7 @@ const {
   getCandidatesByConsistuency,
   deleteCandidateById,
   updateElectionByStatus,
+  getAllElections,
   updateElectionAllData,
 } = require("../services/election/election.services");
 
@@ -82,6 +83,30 @@ const getCandidates = (req, res) => {
     });
 };
 
+const getElections = (req, res) => {
+  getAllElections()
+    .then((elections) => {
+      if (!elections) {
+        return res.status(401).json({
+          status: "0",
+          message: "No election found",
+        });
+      }
+      return res.status(200).json({
+        status: "1",
+        message: "Elections list",
+        data: elections,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(501).json({
+        status: "0",
+        message: "Internal server error",
+      });
+    });
+};
+
 const deleteCandidate = (req, res) => {
   deleteCandidateById(req.body.candidateId)
     .then((candidate) => {
@@ -138,5 +163,6 @@ module.exports = {
   getCandidates,
   deleteCandidate,
   updateElection,
+  getElections,
 };
 

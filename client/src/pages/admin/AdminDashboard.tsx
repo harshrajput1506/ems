@@ -2,6 +2,7 @@ import Hello from "@/components/ui/hello";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Sidebar from "../../components/ui/Sidebar";
+import axios from "axios";
 
 interface Candidates {
   id: number;
@@ -26,14 +27,13 @@ function AdminDashboard() {
   const [currentElections, setCurrentElections] = useState<Election[]>([]);
   const [upcomingElections, setUpcomingElections] = useState<Election[]>([]);
   const [pendingElections, setPendingElections] = useState<Election[]>([]);
-  // const [showCreateElection, setShowCreateElection] = useState(false);
 
-  {
-    // MAKE API CALL FOR ELECTIONS AND SET THEM IN STATE
-  }
-  // const handleCreateElection = () => {
-  //   setShowCreateElection(true);
-  // };
+  // {
+  //   // MAKE API CALL FOR ELECTIONS AND SET THEM IN STATE
+  // }
+  // // const handleCreateElection = () => {
+  // //   setShowCreateElection(true);
+  // // };
 
   // DUMMY DATA for test
   const dummy_data = [
@@ -228,33 +228,58 @@ function AdminDashboard() {
     },
   ];
   useEffect(() => {
-    const currentElections = dummy_data.filter(
-      (election) => election.status === "current"
-    );
-    setCurrentElections(currentElections);
+    const fetchElections = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8000/api/v1/admin/elections"
+        );
+        const elections: Election[] = response.data.data;
 
-    const upcomingElections = dummy_data.filter(
-      (election) => election.status === "upcoming"
-    );
-    setUpcomingElections(upcomingElections);
-    const pendingElections = dummy_data.filter(
-      (election) => election.status === "pending"
-    );
-    setPendingElections(pendingElections);
+        const currentElections = elections.filter(
+          (election) => election.status === "current"
+        );
+        const upcomingElections = elections.filter(
+          (election) => election.status === "upcoming"
+        );
+        const pendingElections = elections.filter(
+          (election) => election.status === "pending"
+        );
+
+        setCurrentElections(currentElections);
+        setUpcomingElections(upcomingElections);
+        setPendingElections(pendingElections);
+      } catch (error) {
+        console.error("Error fetching elections:", error);
+
+        // Use dummy data if API call fails
+        const currentElections = dummy_data.filter(
+          (election) => election.status === "current"
+        );
+        const upcomingElections = dummy_data.filter(
+          (election) => election.status === "upcoming"
+        );
+        const pendingElections = dummy_data.filter(
+          (election) => election.status === "pending"
+        );
+
+        setCurrentElections(currentElections);
+        setUpcomingElections(upcomingElections);
+        setPendingElections(pendingElections);
+      }
+    };
+
+    fetchElections();
   }, []);
+
   // console.log(currentElections);
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
-      {/* Sidebar (Similar to the image you provided) */}
       <Sidebar />
 
       <div className="px-4 m-4 w-10/12">
-        {/* Main Content */}
         <div>
-          {/* Render current elections */}
           <div className="flex flex-col md:flex-row gap-32 m-1">
-            {/* Current Elections */}
             <div>
               <h1 className="mb-4 ml-1">Current Elections</h1>
               <div className="grid grid-cols-1 bg-slate-100 p-3 rounded-md shadow-lg">
@@ -270,7 +295,7 @@ function AdminDashboard() {
                     </div>
                     <div className="p-2">
                       <Link
-                        to={`/admin/current-election/${election.id}`} // Dynamic route with election id
+                        to={`/admin/current-election/${election.id}`}
                         className="bg-white p-1 px-4 rounded-lg"
                       >
                         View
@@ -281,7 +306,6 @@ function AdminDashboard() {
               </div>
             </div>
 
-            {/* Upcoming Elections */}
             <div>
               <h1 className="mb-4 ml-1">Upcoming Elections</h1>
               <div className="grid grid-cols-1 bg-slate-100 p-3 rounded-md shadow-lg">
@@ -297,7 +321,7 @@ function AdminDashboard() {
                     </div>
                     <div className="p-2">
                       <Link
-                        to={`/admin/upcoming/${election.id}`} // Dynamic route with election id
+                        to={`/admin/upcoming/${election.id}`}
                         className="bg-white p-1 px-4 rounded-lg"
                       >
                         View
@@ -308,7 +332,6 @@ function AdminDashboard() {
               </div>
             </div>
 
-            {/* Pending Elections (Note: Adjust the logic as needed) */}
             <div>
               <h1 className="mb-4 ml-1">Pending Elections</h1>
               <div className="grid grid-cols-1 bg-slate-100 p-3 rounded-md shadow-lg">
@@ -324,7 +347,7 @@ function AdminDashboard() {
                     </div>
                     <div className="p-2">
                       <Link
-                        to={`/admin/modify-election/${election.id}`} // Dynamic route with election id
+                        to={`/admin/modify-election/${election.id}`}
                         className="bg-white p-1 px-4 rounded-lg"
                       >
                         View
