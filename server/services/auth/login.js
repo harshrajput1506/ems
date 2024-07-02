@@ -71,7 +71,7 @@ const loginByOtp = async (number, otp) => {
 
 const verifyOtp = async (number, otp) => {
     try {
-        //https://2factor.in/API/V1/:api_key/SMS/VERIFY3/:phone_number/:otp_entered_by_user
+    //https://2factor.in/API/V1/:api_key/SMS/VERIFY3/:phone_number/:otp_entered_by_user
     const numberWithCode = "+91" + number
     const url = "https://2factor.in/API/V1/" +
     process.env.FACTOR_API_KEY +

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Hello from '@/components/ui/hello'
 import Sidebar  from '../../components/ui/Sidebar';
+import axios from 'axios';
 
 
 const UserProfile: React.FC = () => {
@@ -11,6 +12,10 @@ const UserProfile: React.FC = () => {
     age: 30,
     phoneNumber: '+1234567890'
   });
+
+  useEffect(() => {
+    
+  })
 
   return (
     <div className="min-h-screen flex flex-col w-dvw md:flex-row bg-gray-100">

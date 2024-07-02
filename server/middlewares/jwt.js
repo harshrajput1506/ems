@@ -6,7 +6,7 @@ const verifyJwt = (req, res, next) => {
     const token = authHeader && authHeader.split(' ')[1];
     const secret = process.env.SECRET_KEY
 
-    if(!token){
+    if(!token) {
         return res.status(401).json({
             status: "0",
             message: "No Token, Unauthorised",

@@ -73,7 +73,7 @@ const router = createBrowserRouter([
     element: <Vote />,
   },
   {
-    path: "/user/Know-your-voter",
+    path: "/user/know-your-voter",
     element: <KYV />,
   },
   {
