@@ -120,9 +120,13 @@ const updateCandidate = async (data) => {
 
 const deleteCandidateById = async (candidateId) => {
   try {
-    // Delete the candidate
-    const deletedCandidate = await prisma.candidates.delete({
-      where: { id: parseInt(candidateId) },
+    const deletedCandidate = await prisma.candidates.deleteMany({
+      where: {
+        name,
+        political_party: party,
+        age: parseInt(age, 10), // Assuming age is stored as a number in your database
+        consistuency: constituency, // Corrected property name
+      },
     });
 
     console.log("Candidate deleted:", deletedCandidate);
@@ -183,16 +187,14 @@ const getAllElections = async () => {
 const getElectionByIdService = async (electionId) => {
   console.log("Geting all elections");
   try {
-    const elections = await prisma.elections.findMany(
-      {
-        where:{
-          id: parseInt(electionId)
-        },
-        include:{
-          candidates:true
-        }
-      }
-    );
+    const elections = await prisma.elections.findMany({
+      where: {
+        id: parseInt(electionId),
+      },
+      include: {
+        candidates: true,
+      },
+    });
     return elections;
   } catch (error) {
     throw error;
