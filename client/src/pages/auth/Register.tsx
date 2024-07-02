@@ -124,7 +124,7 @@ function Register() {
         >
           Already registered,{" "}
           <Link
-            to="/login"
+            to="/user/login"
             className="font-medium text-teal-500 hover:underline"
           >
             LOGIN
