@@ -18,19 +18,22 @@ const createNewElection = async (data) => {
 
 const addNewCandidate = async (data) => {
   try {
+    // Check if the election exists
     const election = await prisma.elections.findUnique({
       where: { id: data.electionId },
     });
+
     if (!election) {
       throw new Error("Election not found");
     }
 
+    // Create a new candidate
     const newCandidate = await prisma.candidates.create({
       data: {
         name: data.name,
         age: data.age,
         political_party: data.political_party,
-        consistuency: data.consistuency,
+        consistuency: data.constituency, // Corrected property name
         election: {
           connect: {
             id: parseInt(data.electionId),
@@ -41,10 +44,10 @@ const addNewCandidate = async (data) => {
 
     return newCandidate;
   } catch (error) {
+    console.error("Error adding new candidate:", error);
     throw error;
   }
 };
-
 const updateElectionAllData = async (electionId, data) => {
   console.log("Election ID:", electionId);
   try {
@@ -117,8 +120,7 @@ const updateCandidate = async (data) => {
   }
 };
 
-
-const deleteCandidateById = async (candidateId) => {
+const deleteCandidateByCriteria = async (name, party, age, constituency) => {
   try {
     const deletedCandidate = await prisma.candidates.deleteMany({
       where: {
@@ -136,15 +138,14 @@ const deleteCandidateById = async (candidateId) => {
     throw error;
   }
 };
-
 const publishElection = async (electionId) => {
   try {
     // Delete the candidate
     const updateElection = await prisma.elections.update({
       where: { id: parseInt(electionId) },
       data: {
-        result_status:"Published"
-      }
+        result_status: "Published",
+      },
     });
 
     console.log("Election published:", updateElection);
@@ -169,20 +170,18 @@ const getCandidatesByConsistuency = async (consistuencyName) => {
 };
 
 const getAllElections = async () => {
-  console.log("Geting all elections");
+  console.log("Getting all elections");
   try {
-    const elections = await prisma.elections.findMany(
-      {
-        include:{
-          candidates:false
-        }
-      }
-    );
+    const elections = await prisma.Elections.findMany({
+      include: {
+        candidates: false,
+      },
+    });
     return elections;
   } catch (error) {
     throw error;
   }
-};  
+};
 
 const getElectionByIdService = async (electionId) => {
   console.log("Geting all elections");
@@ -205,12 +204,12 @@ module.exports = {
   createNewElection,
   addNewCandidate,
   updateCandidate,
-  deleteCandidateById,
   updateElectionAllData,
   updateElectionByStatus,
   deleteElection,
   getCandidatesByConsistuency,
   getAllElections,
   getElectionByIdService,
-  publishElection
+  publishElection,
+  deleteCandidateByCriteria,
 };
