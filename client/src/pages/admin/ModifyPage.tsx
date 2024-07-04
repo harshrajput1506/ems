@@ -63,7 +63,7 @@ const ModifyPage: React.FC<ElectionPageProps> = ({
     useState<string>(electionEndTime);
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  let { id } = useParams();
+  const { id } = useParams();
   const [choice, setChoice] = useState<String>("");
 
   useEffect(() => {
@@ -76,7 +76,7 @@ const ModifyPage: React.FC<ElectionPageProps> = ({
     const fetchElectionData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/v1/election/${id}`
+          `http://localhost:8000/api/v1/election/${id}`,
         );
         const { status, message, data } = response.data;
 
@@ -88,13 +88,12 @@ const ModifyPage: React.FC<ElectionPageProps> = ({
           setElectionEndDate(election.enddate.split("T")[0]);
           setElectionEndTime(election.enddate.split("T")[1].slice(0, -5));
 
-          // Prepare candidates data in the correct format
           const formattedCandidates: Candidates = {};
           formattedCandidates[selectedConstituencyState] =
             election.candidates.map((candidate: any) => ({
               name: candidate.name,
               party: candidate.political_party,
-              age: candidate.age.toString(), // Assuming age is stored as a string in your data
+              age: candidate.age.toString(),
             }));
 
           setCandidates(formattedCandidates);
@@ -158,7 +157,7 @@ const ModifyPage: React.FC<ElectionPageProps> = ({
     try {
       const response = await axios.post(
         "http://localhost:8000/api/v1/admin/candidate",
-        candidateData
+        candidateData,
       );
 
       if (response.data.status === "1") {
@@ -205,14 +204,14 @@ const ModifyPage: React.FC<ElectionPageProps> = ({
             age,
             constituency, // Corrected property name
           },
-        }
+        },
       );
 
       if (response.data.status === "1") {
         setCandidates((prev) => ({
           ...prev,
           [selectedConstituencyState]: prev[selectedConstituencyState].filter(
-            (_, i) => i !== index
+            (_, i) => i !== index,
           ),
         }));
         alert("Candidate deleted successfully!");
@@ -251,7 +250,7 @@ const ModifyPage: React.FC<ElectionPageProps> = ({
     try {
       const response = await axios.patch(
         `http://localhost:8000/api/v1/admin/election/${id}`, // Correct interpolation
-        electionData
+        electionData,
       );
       console.log("Election updated:", response.data);
       setShowDialog(true);
@@ -294,7 +293,7 @@ const ModifyPage: React.FC<ElectionPageProps> = ({
     try {
       const response = await axios.patch(
         `http://localhost:8000/api/v1/admin/election/${id}`,
-        electionData
+        electionData,
       );
       console.log("Election published:", response.data);
       setShowDialog(true);
@@ -445,7 +444,7 @@ const ModifyPage: React.FC<ElectionPageProps> = ({
                             </button>
                           </td>
                         </tr>
-                      )
+                      ),
                     )}
                   </tbody>
                 </table>
