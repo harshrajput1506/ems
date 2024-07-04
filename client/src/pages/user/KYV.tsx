@@ -38,25 +38,26 @@ const KYV = () => {
     <div className="min-h-screen flex flex-col w-dvw md:flex-row bg-gray-100">
     {/* Sidebar (Similar to the image you provided) */}
     <Sidebar />
-    <div className="px-4 m-4 w-10/12">
+    <div className="px-4 m-4 sm:w-10/12 w-ull">
       <div ><Hello /></div>
 
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="p-6 bg-white rounded-lg shadow-lg w-96">
-        <h2 className="text-2xl font-bold mb-4">Verify Voter ID</h2>
+      <div className="sm:p-6 p-2 w-full bg-white rounded-lg shadow-lg w-96">
+        
         {userDetails ? (
           <div className="mt-6">
-            <h3 className="text-xl font-bold mb-2">User Details</h3>
-            <p><strong>Name:</strong> {userDetails.name}</p>
-            <p><strong>Age:</strong> {userDetails.age}</p>
-            <p><strong>Constituency:</strong> {userDetails.constituency}</p>
-            <p><strong>Address:</strong> {userDetails.address}</p>
+            <h3 className="sm:text-xl font-bold mb-2">User Details</h3>
+            <p className='text-sm sm:text-base'><strong>Name:</strong> {userDetails.name}</p>
+            <p className='text-sm sm:text-base'><strong>Age:</strong> {userDetails.age}</p>
+            <p className='text-sm sm:text-base'><strong>Constituency:</strong> {userDetails.constituency}</p>
+            <p className='text-sm sm:text-base'><strong>Address:</strong> {userDetails.address}</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label htmlFor="epicId" className="block text-gray-700 font-medium mb-2">
+            <h2 className="sm:text-2xl text-base font-bold mb-4">Verify Voter ID</h2>
+              <label htmlFor="epicId" className="block text-gray-700 sm:font-medium mb-2">
                 VOTER ID
               </label>
               <input
