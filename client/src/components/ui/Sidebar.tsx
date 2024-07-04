@@ -70,10 +70,10 @@ function Sidebar() {
 
       {isMobile ?
            <>
-           <div className="burger-icon" onClick={toggleSidebar}>
-             {/* Burger Icon */}
-             <span className="text-2xl m-4">☰</span>
-           </div>
+           <div className="burger-icon cursor-pointer flex  p-4  transition duration-300 ease-in-out" onClick={toggleSidebar}>
+              {/* Burger Icon */}
+              <span className="text-2xl">☰</span>
+            </div>
            <div ref={sidebarRef} className={`z-50 fixed h-screen w-1/2 bg-black text-white p-4 transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
              <div className='flex flex-col h-full'>
                {isOpen ? (
@@ -122,11 +122,11 @@ function Sidebar() {
            </div>
          </>
       :
-      <div className='w-2/12 bg-black text-white static sticky'>
-      <div className= "flex-col justify-between flex h-screen p-4 fixed w-2/12">
+      <div className='lg:w-2/12 bg-black text-white static sticky '>
+      <div className= "flex-col justify-between flex h-screen p-4 fixed lg:w-2/12">
         {/* Top Section: Logo & User */}
         <div className="flex flex-col    ">
-        <span className="font-semibold text-xl my-6 ml-4">{isAdminPath ? 'EMS ADMIN' : 'EMS Dashboard'}</span>
+        <span className="font-semibold text-lg xl:text-xl my-6 ml-4">{isAdminPath ? 'EMS ADMIN' : 'EMS Dashboard'}</span>
         
         <nav className="space-y-6 mt-8">
           {location.pathname.startsWith('/admin/')?
@@ -138,11 +138,11 @@ function Sidebar() {
                     <img
                       src={item.ImgSrc}
                       alt="icon"
-                      className="h-7 w- mr-2 fill-white"
+                      className="xl:h-7 h-5 w- mr-2 fill-white"
                     />
                     <a
                       href={item.Ref}
-                      className="block text-gray-300 hover:text-white"
+                      className="block text-gray-300 text-base xl:text-md hover:text-white"
                     >
                       {item.name}
                     </a>
@@ -158,11 +158,11 @@ function Sidebar() {
                     <img
                       src={item.ImgSrc}
                       alt="icon"
-                      className="h-7 w- mr-2 fill-white"
+                      className="xl:h-7 h-5 w- mr-2 fill-white"
                     />
                     <a
                       href={item.Ref}
-                      className="block text-gray-300 hover:text-white"
+                      className="block text-gray-300 text-base xl:text-md hover:text-white"
                     >
                       {item.name}
                     </a>
@@ -179,7 +179,7 @@ function Sidebar() {
       
       
         <div className='flex flex-col'>
-        <button className="cursor-pointer group relative flex mb-3 text-center gap-1.5 px-8 py-2 m-2 bg-gray-500 bg-opacity-80 text-[#f1f1f1] rounded-3xl hover:bg-opacity-70 transition font-semibold shadow-md">
+        <button className="cursor-pointer group relative flex mb-3 xl:w-full px-2 w-1/2 text-center gap-1.5 xl:px-8 py-1 xl:py-2 m-2 bg-gray-500 bg-opacity-80 text-[#f1f1f1] rounded-3xl hover:bg-opacity-70 transition font-semibold shadow-md">
           {/* <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -211,12 +211,12 @@ function Sidebar() {
           Logout
           
         </button>
-        <a className='flex flex-row border-t-2 hover:bg-gray-70 cursor-pointer pt-4 mt-4 space-y-2 font-medium border-t border-gray-200 '
+        <a className='flex flex-row border-t-2 hover:bg-gray-70 cursor-pointer pt-4 mt-4 space-y-2 font-medium border-t border-gray-200 xl:w-full w-10/12'
            href='/user/profile'>
-          <div className="mt-1 relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600 ">
-              <svg className="absolute w-12 h-12 text-gray-400 -left-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+          <div className="mt-1 relative xl:w-10 xl:h-10 w-6 h-6 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600 ">
+              <svg className="absolute xl:w-12 xl:h-12 w-8 h-8 text-gray-400 -left-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
           </div>
-          <div className='m-4 text-bold text-xl'>
+          <div className='xl:m-4 m-2 text-bold xl:text-xl text-base'>
           {` User`}
           </div>
           </a>

@@ -72,7 +72,7 @@ const Vote = () => {
     <div className="min-h-screen bg-slate-50 flex flex-col w-full md:flex-row">
       <Sidebar />
 
-      <div className="px-4 m-4 xl:w-10/12 w-full">
+      <div className="px-4 sm:m-4 xl:w-10/12 w-full">
         <div>
           <Hello />
         </div>
@@ -135,28 +135,28 @@ const Vote = () => {
 
           {/* Display candidates for selected constituency */}
           {selectedElectionId && selectedConstituency && (
-            <div className="bg-white border-2 shadow-md rounded-lg p-6 mb-8 lg:w-1/2 w-full">
-              <h2 className="text-2xl font-bold mb-4 text-center">Candidates</h2>
+            <div className="bg-white border-2 shadow-md rounded-lg sm:p-6 p-2 mb-8 lg:w-1/2 w-full">
+              <h2 className="sm:text-2xl font-bold mb-4 text-center">Candidates</h2>
               {elections
                 .find(e => e.electionId === selectedElectionId)
                 ?.electionDetails.find(detail => detail.constituency === selectedConstituency)
                 ?.candidates.map(candidate => (
                   <div key={candidate.name} className="flex justify-between items-center mb-2">
-                    <span className="md:text-lg text-medium">{candidate.name}</span><span> {candidate.party}</span>
+                    <span className="md:text-lg text-xs">{candidate.name}</span><span className="md:text-lg text-xs"> {candidate.party}</span>
                     {canUserVote(elections.find(e => e.electionId === selectedElectionId)!, selectedConstituency) ? (
                       userVotes[selectedElectionId] === candidate.name ? (
-                        <button className="px-4 py-2 bg-gray-500 text-white rounded-3xl" disabled>Voted</button>
+                        <button className="sm:px-4 px-1 sm:py-2  bg-gray-500 text-white rounded-3xl" disabled>Voted</button>
                       ) : (
                         <button
                           onClick={() => handleVote(selectedElectionId, candidate.name)}
-                          className="px-6 py-2 bg-green-700 text-white rounded-3xl"
+                          className="sm:px-6 px-2 sm:py-2 bg-green-700 text-white rounded-3xl"
                           disabled={!!userVotes[selectedElectionId]}
                         >
                           Vote
                         </button>
                       )
                     ) : (
-                      <span className="text-red-500">Not eligible to vote in this constituency</span>
+                      <span className="text-red-500 md:text-lg text-xs text-center">Not from this constituency</span>
                     )}
                   </div>
                 ))}

@@ -255,7 +255,7 @@ const ElectionPage: React.FC<ElectionPageProps> = ({
           <div className="flex flex-col lg:flex-row lg:gap-96 ">
             <button
               onClick={handleSave}
-              className="px-4 py-2 bg-green-500 text-white rounded-md ml-5"
+              className="px-4 py-2 bg-green-500 text-white rounded-md xl:ml-5 sm:w-60"
             >
               Create Election
             </button>
