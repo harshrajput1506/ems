@@ -3,8 +3,8 @@ const {
   addNewCandidate,
   getCandidatesByConsistuency,
   deleteCandidateByCriteria,
-  updateElectionByStatus,
   getAllElections,
+  deleteElectionById,
   updateElectionAllData,
   getElectionByIdService,
   publishElection,
@@ -141,32 +141,34 @@ const deleteCandidate = async (req, res) => {
   }
 };
 
-const updateElection = (req, res) => {
+const updateElection = async (req, res) => {
   const electionId = req.params.id;
-  updateElectionAllData(electionId, req.body)
-    .then((election) => {
-      if (!election) {
-        return res.status(401).json({
-          status: "0",
-          message: "No election found",
-        });
-      }
+  const electionData = {
+    title: req.body.title,
+    status: req.body.status,
+    startdate: req.body.startdate,
+    enddate: req.body.enddate,
+  };
 
-      return res.status(200).json({
-        status: "1",
-        message: "Election updated",
-        data: election,
-      });
-    })
-    .catch((error) => {
-      console.log(error);
-      res.status(501).json({
-        status: "0",
-        message: "Internal server error",
-      });
+  try {
+    const updatedElection = await updateElectionAllData(
+      electionId,
+      electionData,
+    );
+    res.status(200).json({
+      status: "success",
+      message: "Election updated successfully",
+      data: updatedElection,
     });
+  } catch (error) {
+    console.error("Error updating election:", error);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to update election. Please try again later.",
+      error: error.message,
+    });
+  }
 };
-
 const publishElectionResult = (req, res) => {
   const electionId = req.body.id;
   publishElection(electionId)
@@ -220,6 +222,31 @@ const getElectionById = (req, res) => {
     });
 };
 
+const deleteElection = (req, res) => {
+  const electionId = req.params.id;
+  deleteElectionById(electionId)
+    .then((election) => {
+      if (!election) {
+        return res.status(401).json({
+          status: "0",
+          message: "No election found",
+        });
+      }
+      return res.status(200).json({
+        status: "1",
+        message: "Election Deleted",
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(501).json({
+        status: "0",
+        message: "Internal server error",
+        error: error,
+      });
+    });
+};
+
 module.exports = {
   createElection,
   addCandidate,
@@ -229,4 +256,5 @@ module.exports = {
   getElections,
   getElectionById,
   publishElectionResult,
+  deleteElection,
 };

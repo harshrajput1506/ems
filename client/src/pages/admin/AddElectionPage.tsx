@@ -2,7 +2,7 @@ import Hello from "@/components/ui/hello";
 import Sidebar from "../../components/ui/Sidebar";
 import React, { useState, useEffect, ChangeEvent } from "react";
 import constituenciesData from "../../../../server/src/ac/delhi_constituencies.json";
-import axios from "axios";
+import api from "@/utils/api";
 
 interface Candidate {
   name: string;
@@ -145,10 +145,7 @@ const ElectionPage: React.FC<ElectionPageProps> = ({
     localStorage.setItem("electionData", jsonString);
 
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/v1/admin/election",
-        electionData,
-      );
+      const response = await api.post("/admin/election", electionData);
       console.log("Election created:", response.data);
       setShowDialog(true);
     } catch (error) {
@@ -175,24 +172,6 @@ const ElectionPage: React.FC<ElectionPageProps> = ({
               }
               className="mt-1 block p-2 border border-gray-300 rounded-md bg-gray-300 w-64"
             />
-          </div>
-          <div className="mb-6">
-            <label className="block text-gray-850 font-medium">
-              Select Constituency
-            </label>
-            <select
-              value={selectedConstituencyState}
-              onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-                setSelectedConstituency(e.target.value)
-              }
-              className="block w-64 p-2 border border-gray-300 rounded-md bg-gray-300"
-            >
-              {constituenciesData.map((constituency: Constituency) => (
-                <option key={constituency.name} value={constituency.name}>
-                  {constituency.name}
-                </option>
-              ))}
-            </select>
           </div>
 
           <div className="flex flex-col lg:flex-row lg:gap-64">

@@ -2,8 +2,9 @@ import Hello from "@/components/ui/hello";
 import Sidebar from "../../components/ui/Sidebar";
 import React, { useState, useEffect, ChangeEvent } from "react";
 import constituenciesData from "../../../../server/src/ac/delhi_constituencies.json";
-import axios from "axios";
 import { useParams } from "react-router-dom";
+import api from "@/utils/api";
+import { useNavigate } from "react-router-dom";
 
 interface Candidate {
   name: string;
@@ -61,11 +62,11 @@ const ModifyPage: React.FC<ElectionPageProps> = ({
     useState<string>(electionEndDate);
   const [electionEndTimeState, setElectionEndTime] =
     useState<string>(electionEndTime);
-  const [showDialog, setShowDialog] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { id } = useParams();
-  const [choice, setChoice] = useState<String>("");
-
+  const [showDialog, setShowDialog] = useState<boolean>(false);
+  const [dialogMessage, setDialogMessage] = useState<string>("");
+  const navigate = useNavigate();
   useEffect(() => {
     if (constituenciesData.length > 0) {
       setSelectedConstituency(constituenciesData[0].name);
@@ -75,9 +76,7 @@ const ModifyPage: React.FC<ElectionPageProps> = ({
   useEffect(() => {
     const fetchElectionData = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8000/api/v1/election/${id}`,
-        );
+        const response = await api.get(`/election/${id}`);
         const { status, message, data } = response.data;
 
         if (status === "1") {
@@ -88,15 +87,28 @@ const ModifyPage: React.FC<ElectionPageProps> = ({
           setElectionEndDate(election.enddate.split("T")[0]);
           setElectionEndTime(election.enddate.split("T")[1].slice(0, -5));
 
-          const formattedCandidates: Candidates = {};
-          formattedCandidates[selectedConstituencyState] =
-            election.candidates.map((candidate: any) => ({
+          // Initialize candidatesState with empty arrays for all constituencies
+          const initialCandidates: Candidates = {};
+          constituenciesData.forEach((constituency: Constituency) => {
+            initialCandidates[constituency.name] = [];
+          });
+
+          // Populate candidates for constituencies that have data
+          election.candidates.forEach((candidate: any) => {
+            const constituency =
+              candidate.constituency || selectedConstituencyState;
+            if (!initialCandidates[constituency]) {
+              initialCandidates[constituency] = [];
+            }
+            initialCandidates[constituency].push({
               name: candidate.name,
               party: candidate.political_party,
               age: candidate.age.toString(),
-            }));
+              constituency: constituency,
+            });
+          });
 
-          setCandidates(formattedCandidates);
+          setCandidates(initialCandidates);
         } else {
           console.error(message);
           setError("Failed to fetch election data.");
@@ -108,7 +120,7 @@ const ModifyPage: React.FC<ElectionPageProps> = ({
     };
 
     fetchElectionData();
-  }, [id]);
+  }, [id, selectedConstituencyState]);
 
   useEffect(() => {
     const savedData = localStorage.getItem("electionData");
@@ -136,30 +148,28 @@ const ModifyPage: React.FC<ElectionPageProps> = ({
   }, []);
 
   const handleAddCandidate = async () => {
-    if (!candidateNameState || !partyNameState || !candidateAgeState) {
+    if (
+      !candidateNameState ||
+      !partyNameState ||
+      !candidateAgeState ||
+      !selectedConstituencyState
+    ) {
       alert("All fields are mandatory!");
       return;
     }
-
     if (!id) {
       alert("Election ID is missing!");
       return;
     }
-
     const candidateData = {
       name: candidateNameState,
       age: parseInt(candidateAgeState, 10),
       political_party: partyNameState,
-      constituency: selectedConstituencyState, // Corrected property name
+      constituency: selectedConstituencyState,
       electionId: parseInt(id, 10),
     };
-
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/v1/admin/candidate",
-        candidateData,
-      );
-
+      const response = await api.post("/admin/candidate", candidateData);
       if (response.data.status === "1") {
         // Update local state with the new candidate
         setCandidates((prev) => ({
@@ -170,42 +180,41 @@ const ModifyPage: React.FC<ElectionPageProps> = ({
               name: candidateNameState,
               party: partyNameState,
               age: candidateAgeState,
-              constituency: selectedConstituencyState, // Ensure consistency
+              constituency: selectedConstituencyState,
             },
           ],
         }));
-
         // Reset form fields
         setCandidateName("");
         setPartyName("");
         setCandidateAge("");
-
         alert("New candidate added successfully!");
       } else {
-        alert(response.data.message); // Alert error message from server
+        alert(response.data.message);
       }
     } catch (error) {
       console.error("Error adding candidate:", error);
-      alert("Failed to add candidate. Please try again.");
+      if (error.response && error.response.status === 401) {
+        alert("Unauthorized. Please log in again.");
+        // Optionally, redirect to login page here
+      } else {
+        alert("Failed to add candidate. Please try again.");
+      }
     }
   };
-
   const handleDeleteCandidate = async (index: number) => {
     const candidateToDelete = candidatesState[selectedConstituencyState][index];
     const { name, party, age, constituency } = candidateToDelete; // Corrected property name
 
     try {
-      const response = await axios.delete(
-        `http://localhost:8000/api/v1/admin/candidate`,
-        {
-          data: {
-            name,
-            party,
-            age,
-            constituency, // Corrected property name
-          },
+      const response = await api.delete(`/admin/candidate`, {
+        data: {
+          name,
+          party,
+          age,
+          constituency, // Corrected property name
         },
-      );
+      });
 
       if (response.data.status === "1") {
         setCandidates((prev) => ({
@@ -248,13 +257,13 @@ const ModifyPage: React.FC<ElectionPageProps> = ({
     localStorage.setItem("electionData", jsonString);
 
     try {
-      const response = await axios.patch(
-        `http://localhost:8000/api/v1/admin/election/${id}`, // Correct interpolation
+      const response = await api.patch(
+        `/admin/election/${id}`, // Correct interpolation
         electionData,
       );
       console.log("Election updated:", response.data);
+      setDialogMessage("Election Updated Successfully");
       setShowDialog(true);
-      setChoice("update");
     } catch (error) {
       console.error("Error updating election:", error);
       setError("Failed to update election. Please try again.");
@@ -271,69 +280,133 @@ const ModifyPage: React.FC<ElectionPageProps> = ({
       return;
     }
 
-    const currentDate = new Date().toISOString().slice(0, 10);
     const startTime = electionStartDateState + "T" + electionStartTimeState;
     const endTime = electionEndDateState + "T" + electionEndTimeState;
 
-    let status = "Upcoming";
-    if (
-      currentDate >= electionStartDateState &&
-      currentDate <= electionEndDateState
-    ) {
-      status = "Ongoing";
-    }
+    const startDateTime = new Date(startTime);
+    const endDateTime = new Date(endTime);
 
+    // Current date and time
+    const currentDateTime = new Date();
+
+    let status = "Upcoming";
+    if (currentDateTime >= startDateTime && currentDateTime <= endDateTime) {
+      status = "Ongoing";
+    } else if (currentDateTime > endDateTime) {
+      status = "Completed";
+    } else {
+      status = "Upcoming";
+    }
     const electionData = {
-      ...candidatesState,
+      electionName: electionNameState,
       electionStartDate: startTime,
       electionEndDate: endTime,
-      status: status,
+      electionStatus: status,
     };
 
+    const jsonString = JSON.stringify(electionData, null, 2);
+    localStorage.setItem("electionData", jsonString);
+    setDialogMessage("Election Published Successfully");
+    setShowDialog(true);
+
     try {
-      const response = await axios.patch(
-        `http://localhost:8000/api/v1/admin/election/${id}`,
-        electionData,
+      const response = await api.patch(
+        `/admin/election/publish/${id}/${status}`,
       );
       console.log("Election published:", response.data);
-      setShowDialog(true);
-      setChoice("publish");
     } catch (error) {
       console.error("Error publishing election:", error);
       setError("Failed to publish election. Please try again.");
     }
   };
+  const handleDelete = async () => {
+    try {
+      const response = await api.delete(`/admin/election/${id}`);
+      console.log("Election deleted:", response.data);
+      setDialogMessage("Election Deleted Successfully");
+      setShowDialog(true);
+    } catch (error) {
+      console.error("Error deleting election:", error);
+      setError("Failed to delete election. Please try again.");
+    }
+  };
+  const handleDialogClose = () => {
+    setShowDialog(false);
+    navigate("/admin/dashboard");
+  };
 
   return (
-    <div className="min-h-screen overflow-x-hidden flex flex-col lg:flex-row bg-slate-50">
+    <div className="flex">
       <Sidebar />
-      <div className="p-8 px-4 xl:w-10/12 overflow-x-hidden lg:w-dvw ">
+      <div className="flex-1 w-full">
         <Hello />
-        <div className="p-6">
-          <h1 className="text-3xl font-bold mb-6">Election Form</h1>
-          <div className="mb-6">
-            <label className="block text-gray-850 font-medium">
+        <div className="px-6 py-8 bg-white shadow-lg rounded-lg">
+          <div className="mb-8">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
               Election Name
             </label>
             <input
               type="text"
+              placeholder="Election Name"
               value={electionNameState}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setElectionName(e.target.value)
-              }
-              className="mt-1 block p-2 border border-gray-300 rounded-md bg-gray-300 w-64"
+              onChange={(e) => setElectionName(e.target.value)}
+              className="border rounded w-full py-2 px-3 text-gray-700"
             />
           </div>
-          <div className="mb-6">
-            <label className="block text-gray-850 font-medium">
-              Select Constituency
+          <div className="grid grid-cols-2 gap-8 mb-8">
+            <div>
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Start Date
+              </label>
+              <input
+                type="date"
+                value={electionStartDateState}
+                onChange={(e) => setElectionStartDate(e.target.value)}
+                className="border rounded w-full py-2 px-3 text-gray-700"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Start Time
+              </label>
+              <input
+                type="time"
+                value={electionStartTimeState}
+                onChange={(e) => setElectionStartTime(e.target.value)}
+                className="border rounded w-full py-2 px-3 text-gray-700"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                End Date
+              </label>
+              <input
+                type="date"
+                value={electionEndDateState}
+                onChange={(e) => setElectionEndDate(e.target.value)}
+                className="border rounded w-full py-2 px-3 text-gray-700"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                End Time
+              </label>
+              <input
+                type="time"
+                value={electionEndTimeState}
+                onChange={(e) => setElectionEndTime(e.target.value)}
+                className="border rounded w-full py-2 px-3 text-gray-700"
+              />
+            </div>
+          </div>
+          <div className="mb-8">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              Constituency
             </label>
             <select
               value={selectedConstituencyState}
-              onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-                setSelectedConstituency(e.target.value)
-              }
-              className="block w-64 p-2 border border-gray-300 rounded-md bg-gray-300"
+              onChange={(e) => setSelectedConstituency(e.target.value)}
+              className="border rounded w-full py-2 px-3 text-gray-700"
             >
               {constituenciesData.map((constituency: Constituency) => (
                 <option key={constituency.name} value={constituency.name}>
@@ -342,190 +415,111 @@ const ModifyPage: React.FC<ElectionPageProps> = ({
               ))}
             </select>
           </div>
-
-          <div className="flex flex-col lg:flex-row gap-12">
-            <div className="mb-4">
-              <label className="block text-gray-850 font-medium">
-                Candidate Name
-              </label>
-              <input
-                type="text"
-                value={candidateNameState}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setCandidateName(e.target.value)
-                }
-                className="mt-1 block w-56 p-2 border border-gray-300 rounded-md bg-gray-300"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-850 font-medium">
-                Political Party
-              </label>
-              <input
-                type="text"
-                value={partyNameState}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setPartyName(e.target.value)
-                }
-                className="mt-1 block w-56 p-2 border border-gray-300 rounded-md bg-gray-300"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-850 font-medium">Age</label>
-              <input
-                type="text"
-                value={candidateAgeState}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setCandidateAge(e.target.value)
-                }
-                className="mt-1 block w-24 p-2 border border-gray-300 rounded-md bg-gray-300"
-              />
-            </div>
+          <div className="mb-8">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              Candidate Name
+            </label>
+            <input
+              type="text"
+              placeholder="Candidate Name"
+              value={candidateNameState}
+              onChange={(e) => setCandidateName(e.target.value)}
+              className="border rounded w-full py-2 px-3 text-gray-700"
+            />
           </div>
-
-          <div className="flex gap-4">
-            <button
-              onClick={handleAddCandidate}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700"
-            >
-              Add Candidate
-            </button>
+          <div className=" mb-8">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              Party Name
+            </label>
+            <input
+              type="text"
+              placeholder="Party Name"
+              value={partyNameState}
+              onChange={(e) => setPartyName(e.target.value)}
+              className="border rounded w-full py-2 px-3 text-gray-700"
+            />
           </div>
-
+          <div className="mb-8">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              Candidate Age
+            </label>
+            <input
+              type="text"
+              placeholder="Candidate Age"
+              value={candidateAgeState}
+              onChange={(e) => setCandidateAge(e.target.value)}
+              className="border rounded w-full py-2 px-3 text-gray-700"
+            />
+          </div>
+          <button
+            onClick={handleAddCandidate}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Add Candidate
+          </button>
           <div className="mt-8">
-            <h2 className="text-xl font-bold mb-4">Candidates List</h2>
-            {candidatesState[selectedConstituencyState] &&
-              candidatesState[selectedConstituencyState].length > 0 && (
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            <h3 className="text-xl font-semibold mb-4">Candidates</h3>
+
+            <ul>
+              {candidatesState &&
+              Object.keys(candidatesState).length > 0 &&
+              candidatesState[selectedConstituencyState] &&
+              candidatesState[selectedConstituencyState].length > 0 ? (
+                candidatesState[selectedConstituencyState].map(
+                  (candidate: Candidate, index: number) => (
+                    <li key={index} className="flex justify-between mb-2">
+                      <div>
+                        {candidate.name} - {candidate.party} - {candidate.age}
+                      </div>
+                      <button
+                        onClick={() => handleDeleteCandidate(index)}
+                        className="text-red-500 hover:text-red-700"
                       >
-                        Name
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Party
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Age
-                      </th>
-                      <th scope="col" className="relative px-6 py-3">
-                        <span className="sr-only">Edit</span>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {candidatesState[selectedConstituencyState].map(
-                      (candidate: Candidate, index: number) => (
-                        <tr key={index}>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            {candidate.name}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {candidate.party}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {candidate.age}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <button
-                              onClick={() => handleDeleteCandidate(index)}
-                              className="text-red-600 hover:text-red-900"
-                            >
-                              Delete
-                            </button>
-                          </td>
-                        </tr>
-                      ),
-                    )}
-                  </tbody>
-                </table>
+                        Delete
+                      </button>
+                    </li>
+                  ),
+                )
+              ) : (
+                <li>No candidates for this constituency</li>
               )}
+            </ul>
           </div>
-
-          <div className="mt-8">
-            <h2 className="text-xl font-bold mb-4">Election Timings</h2>
-            <div className="flex flex-col lg:flex-row gap-12">
-              <div className="mb-4">
-                <label className="block text-gray-850 font-medium">
-                  Start Date
-                </label>
-                <input
-                  type="date"
-                  value={electionStartDateState}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setElectionStartDate(e.target.value)
-                  }
-                  className="mt-1 block p-2 border border-gray-300 rounded-md bg-gray-300 w-56"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-850 font-medium">
-                  Start Time
-                </label>
-                <input
-                  type="time"
-                  value={electionStartTimeState}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setElectionStartTime(e.target.value)
-                  }
-                  className="mt-1 block p-2 border border-gray-300 rounded-md bg-gray-300 w-40"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-850 font-medium">
-                  End Date
-                </label>
-                <input
-                  type="date"
-                  value={electionEndDateState}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setElectionEndDate(e.target.value)
-                  }
-                  className="mt-1 block p-2 border border-gray-300 rounded-md bg-gray-300 w-56"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-850 font-medium">
-                  End Time
-                </label>
-                <input
-                  type="time"
-                  value={electionEndTimeState}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setElectionEndTime(e.target.value)
-                  }
-                  className="mt-1 block p-2 border border-gray-300 rounded-md bg-gray-300 w-40"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="flex gap-4 mt-8">
+          <div className="mt-8 flex space-x-4">
             <button
               onClick={handleUpdate}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700"
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
             >
-              Update Election
+              Update
             </button>
             <button
               onClick={handlePublish}
-              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:bg-green-700"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
-              Publish Election
+              Publish
+            </button>
+            <button
+              onClick={handleDelete}
+              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Delete
             </button>
           </div>
         </div>
       </div>
-      {/* Additional components or elements */}
+      {showDialog && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+          <div className="bg-white p-6 rounded shadow-md text-center">
+            <h2 className="text-2xl font-bold mb-4">{dialogMessage}</h2>
+            <button
+              onClick={handleDialogClose}
+              className="px-4 py-2 bg-blue-500 text-white rounded-md"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
