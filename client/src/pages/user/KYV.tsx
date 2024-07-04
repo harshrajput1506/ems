@@ -57,7 +57,7 @@ const KYV = () => {
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label htmlFor="epicId" className="block text-gray-700 font-medium mb-2">
-                EPIC ID
+                VOTER ID
               </label>
               <input
                 type="text"

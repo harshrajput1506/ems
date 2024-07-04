@@ -1,30 +1,30 @@
 import Hello from "@/components/ui/hello";
 import Sidebar from "../../components/ui/Sidebar";
 import React, { useState, useEffect, ChangeEvent } from "react";
-import constituenciesData from "../../../../server/src/ac/delhi_constituencies.json";
+// import constituenciesData from "../../../../server/src/ac/delhi_constituencies.json";
 import axios from "axios";
 
-interface Candidate {
-  name: string;
-  party: string;
-  age: string;
-}
+// interface Candidate {
+//   name: string;
+//   party: string;
+//   age: string;
+// }
 
-interface Constituency {
-  name: string;
-}
+// interface Constituency {
+//   name: string;
+// }
 
-interface Candidates {
-  [key: string]: Candidate[];
-}
+// interface Candidates {
+//   [key: string]: Candidate[];
+// }
 
 interface ElectionPageProps {
   electionName?: string;
-  selectedConstituency?: string;
-  candidateName?: string;
-  partyName?: string;
-  candidateAge?: string;
-  candidates?: Candidates;
+  // selectedConstituency?: string;
+  // candidateName?: string;
+  // partyName?: string;
+  // candidateAge?: string;
+  // candidates?: Candidates;
   electionStartDate?: string;
   electionStartTime?: string;
   electionEndDate?: string;
@@ -33,24 +33,24 @@ interface ElectionPageProps {
 
 const ElectionPage: React.FC<ElectionPageProps> = ({
   electionName = "",
-  selectedConstituency = "",
-  candidateName = "",
-  partyName = "",
-  candidateAge = "",
-  candidates = {},
+  // selectedConstituency = "",
+  // candidateName = "",
+  // partyName = "",
+  // candidateAge = "",
+  // candidates = {},
   electionStartDate = "",
   electionStartTime = "",
   electionEndDate = "",
   electionEndTime = "",
 }) => {
   const [electionNameState, setElectionName] = useState<string>(electionName);
-  const [selectedConstituencyState, setSelectedConstituency] =
-    useState<string>(selectedConstituency);
-  const [candidateNameState, setCandidateName] =
-    useState<string>(candidateName);
-  const [partyNameState, setPartyName] = useState<string>(partyName);
-  const [candidateAgeState, setCandidateAge] = useState<string>(candidateAge);
-  const [candidatesState, setCandidates] = useState<Candidates>(candidates);
+  // const [selectedConstituencyState, setSelectedConstituency] =
+  //   useState<string>(selectedConstituency);
+  // const [candidateNameState, setCandidateName] =
+  //   useState<string>(candidateName);
+  // const [partyNameState, setPartyName] = useState<string>(partyName);
+  // const [candidateAgeState, setCandidateAge] = useState<string>(candidateAge);
+  // const [candidatesState, setCandidates] = useState<Candidates>(candidates);
   const [electionStartDateState, setElectionStartDate] =
     useState<string>(electionStartDate);
   const [electionStartTimeState, setElectionStartTime] =
@@ -62,18 +62,18 @@ const ElectionPage: React.FC<ElectionPageProps> = ({
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (constituenciesData.length > 0) {
-      setSelectedConstituency(constituenciesData[0].name);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (constituenciesData.length > 0) {
+  //     setSelectedConstituency(constituenciesData[0].name);
+  //   }
+  // }, []);
 
   useEffect(() => {
     const savedData = localStorage.getItem("electionData");
     if (savedData) {
       const {
         electionName,
-        constituencies,
+        // constituencies,
         electionStartDate,
         electionStartTime,
         electionEndTime,
@@ -81,39 +81,39 @@ const ElectionPage: React.FC<ElectionPageProps> = ({
       } = JSON.parse(savedData);
 
       setElectionName(electionName);
-      setCandidates(constituencies);
+      // setCandidates(constituencies);
       setElectionStartDate(electionStartDate);
       setElectionStartTime(electionStartTime);
       setElectionEndDate(electionEndDate);
       setElectionEndTime(electionEndTime);
 
-      if (constituenciesData.length > 0) {
-        setSelectedConstituency(constituenciesData[0].name);
-      }
+      // if (constituenciesData.length > 0) {
+      //   setSelectedConstituency(constituenciesData[0].name);
+      // }
     }
   }, []);
 
-  const handleAddCandidate = () => {
-    if (!candidateNameState || !partyNameState || !candidateAgeState) {
-      alert("All fields are mandatory!");
-      return;
-    }
+  // const handleAddCandidate = () => {
+  //   if (!candidateNameState || !partyNameState || !candidateAgeState) {
+  //     alert("All fields are mandatory!");
+  //     return;
+  //   }
 
-    setCandidates((prev) => ({
-      ...prev,
-      [selectedConstituencyState]: [
-        ...(prev[selectedConstituencyState] || []),
-        {
-          name: candidateNameState,
-          party: partyNameState,
-          age: candidateAgeState,
-        },
-      ],
-    }));
-    setCandidateName("");
-    setPartyName("");
-    setCandidateAge("");
-  };
+  //   setCandidates((prev) => ({
+  //     ...prev,
+  //     [selectedConstituencyState]: [
+  //       ...(prev[selectedConstituencyState] || []),
+  //       {
+  //         name: candidateNameState,
+  //         party: partyNameState,
+  //         age: candidateAgeState,
+  //       },
+  //     ],
+  //   }));
+  //   setCandidateName("");
+  //   setPartyName("");
+  //   setCandidateAge("");
+  // };
 
   const handleSave = async () => {
     if (
@@ -176,7 +176,7 @@ const ElectionPage: React.FC<ElectionPageProps> = ({
               className="mt-1 block p-2 border border-gray-300 rounded-md bg-gray-300 w-64"
             />
           </div>
-          <div className="mb-6">
+          {/* <div className="mb-6">
             <label className="block text-gray-850 font-medium">
               Select Constituency
             </label>
@@ -193,7 +193,7 @@ const ElectionPage: React.FC<ElectionPageProps> = ({
                 </option>
               ))}
             </select>
-          </div>
+          </div> */}
 
           <div className="flex flex-col lg:flex-row lg:gap-64">
             <div className="mb-6">
