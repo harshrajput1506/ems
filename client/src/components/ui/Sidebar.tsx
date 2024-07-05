@@ -18,6 +18,41 @@ const userItems = [
   { name: 'Voting', Ref: '/user/voting', ImgSrc: VoteIcon },
   { name: 'Voting Result', Ref: '/user/results', ImgSrc: Result },
   { name: 'KYV', Ref: '/user/Know-your-voter', ImgSrc: KnowyourVOter },
+
+import { useState, useEffect, useRef } from "react";
+import dashboardIcon from "../../assets/images/dashboard.svg";
+import VoteIcon from "../../assets/images/vote1.svg";
+import Result from "../../assets/images/result.svg";
+import addElectionIcon from "../../assets/images/election-event.svg";
+import publishResult from "../../assets/images/arrow-up-right-svgrepo-com.svg";
+import KnowyourVOter from "../../assets/images/arrows-vertical-svgrepo-com.svg";
+// import { useLocation } from 'react-router-dom';
+const isAdminPath = location.pathname.startsWith("/admin");
+console.log(isAdminPath, "sadsd");
+const adminItems = [
+  { name: "Dashboard", Ref: "/admin/dashboard", ImgSrc: dashboardIcon },
+  {
+    name: "Create Election",
+    Ref: "/admin/add-election",
+    ImgSrc: addElectionIcon,
+  },
+  // { name: 'Create Elections', label: 'About' , Imgsrc:addElectionIcon },
+  // { name: 'Voting Result', Ref: '/admin/add-election' , ImgSrc:dashboardIcon  },
+  {
+    name: "Publish Result",
+    Ref: "/admin/publish-result",
+    ImgSrc: publishResult,
+  },
+];
+
+const userItems = [
+  { name: "Dashboard", Ref: "/user/dashboard", ImgSrc: dashboardIcon },
+  { name: "Voting", Ref: "/user/voting", ImgSrc: VoteIcon },
+  // { name: 'Create Elections', label: 'About' , Imgsrc:addElectionIcon },
+  // { name: 'Voting Result', Ref: '/admin/add-election' , ImgSrc:dashboardIcon  },
+  { name: "Voting Result", Ref: "/user/results", ImgSrc: Result },
+  { name: "KYV", Ref: "/user/Know-your-voter", ImgSrc: KnowyourVOter },
+
 ];
 
 function Sidebar() {
@@ -33,18 +68,22 @@ function Sidebar() {
   };
 
   const handleClickOutside = (event: MouseEvent) => {
-    if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+    if (
+      sidebarRef.current &&
+      !sidebarRef.current.contains(event.target as Node)
+    ) {
       setIsOpen(false);
     }
   };
 
   useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
+  const [selected, setSelected] = useState("");
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     const handleResize = () => {
@@ -52,10 +91,10 @@ function Sidebar() {
     };
     handleResize();
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -67,6 +106,7 @@ function Sidebar() {
     <>
       {isMobile ? (
         <>
+          
           <div className="burger-icon cursor-pointer flex p-4 transition duration-300 ease-in-out" onClick={toggleSidebar}>
             {/* Burger Icon */}
             <span className="text-2xl">☰</span>
