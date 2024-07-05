@@ -49,35 +49,32 @@ const addNewCandidate = async (data) => {
   }
 };
 const updateElectionAllData = async (electionId, data) => {
-  console.log("Election ID:", electionId);
   try {
-    // Update the election
-    const electionId = data.electionId;
-    const updateData = {
-      title: data.title,
-      status: data.status,
-      startdate: data.startdate,
-      enddate: data.enddate,
-    };
+    // Implement your logic to update election data using Prisma or other ORM
     const updatedElection = await prisma.elections.update({
       where: { id: parseInt(electionId) },
-      data: updateData,
+      data: {
+        title: data.title,
+        status: data.status,
+        startdate: data.startdate,
+        enddate: data.enddate,
+      },
     });
-
     console.log("Election updated:", updatedElection);
     return updatedElection;
   } catch (error) {
     throw error;
   }
 };
-const updateElectionByStatus = async (data) => {
+const updateElectionByStatus = async (req) => {
   try {
-    // Update the election by status
-    const electionId = data.electionId;
+    const electionId = req.params.id;
+    const status = req.params.status;
+    console.log("Election ID:", electionId);
     const updatedElection = await prisma.elections.update({
       where: { id: parseInt(electionId) },
       data: {
-        status: data.status,
+        status: status,
       },
     });
 
@@ -200,6 +197,17 @@ const getElectionByIdService = async (electionId) => {
   }
 };
 
+const deleteElectionById = async (electionId) => {
+  try {
+    const deletedElection = await prisma.elections.delete({
+      where: { id: parseInt(electionId) },
+    });
+    return deletedElection;
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   createNewElection,
   addNewCandidate,
@@ -212,4 +220,5 @@ module.exports = {
   getElectionByIdService,
   publishElection,
   deleteCandidateByCriteria,
+  deleteElectionById,
 };
