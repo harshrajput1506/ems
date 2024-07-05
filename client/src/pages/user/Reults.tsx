@@ -83,7 +83,7 @@ const ElectionResults: React.FC = () => {
   return (
     <div className="min-h-screen flex bg-slate-50 flex-col w-dvw lg:flex-row">
       <Sidebar />
-      <div className="p-8 px-4 w-10/12 ">
+      <div className="p-8 px-4 md:w-10/12 ">
         <div><Hello /></div>
         <div className="p-6 bg-gray-100">
           <h1 className="text-2xl font-bold mb-4">Election Results</h1>
@@ -92,7 +92,7 @@ const ElectionResults: React.FC = () => {
             <select
               value={selectedElectionId}
               onChange={handleElectionChange}
-              className="mt-1 block w-64 p-2 border border-gray-300 rounded-md"
+              className="mt-1 block sm:w-64 p-2 border border-gray-300 rounded-md"
             >
               <option value="">Select an Election</option>
               {elections.map((election: Election) => (
@@ -108,7 +108,7 @@ const ElectionResults: React.FC = () => {
               <select
                 value={selectedConstituency}
                 onChange={handleConstituencyChange}
-                className="mt-1 block w-64 p-2 border border-gray-300 rounded-md"
+                className="mt-1 block sm:w-64 p-2 border border-gray-300 rounded-md"
               >
                 <option value="">Select a Constituency</option>
                 {elections.find(election => election.electionId === selectedElectionId)?.constituencies.map((constituency: Constituency) => (
@@ -134,9 +134,9 @@ const ElectionResults: React.FC = () => {
                   <tbody>
                     {candidates.map((candidate, index) => (
                       <tr key={index} className="hover:bg-gray-200">
-                        <td className="py-2 px-4 border">{candidate.name}</td>
-                        <td className="py-2 px-4 border">{candidate.party}</td>
-                        <td className="py-2 px-4 border">{candidate.votes}</td>
+                        <td className="py-2 sm:px-4 px-2 border">{candidate.name}</td>
+                        <td className="py-2 sm:px-4 px-2 border">{candidate.party}</td>
+                        <td className="py-2 sm:px-4 px-2 border">{candidate.votes}</td>
                       </tr>
                     ))}
                   </tbody>

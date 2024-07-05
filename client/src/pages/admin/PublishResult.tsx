@@ -83,7 +83,7 @@ const ElectionResults: React.FC = () => {
   return (
     <div className="min-h-screen flex bg-slate-50 flex-col w-dvw lg:flex-row">
       <Sidebar />
-      <div className="p-8 px-4 w-10/12 ">
+      <div className="p-8 px-4 md:w-10/12 ">
         <div><Hello /></div>
         <div className="p-6 bg-gray-100">
           <h1 className="text-2xl font-bold mb-4">Election Results</h1>
@@ -92,7 +92,7 @@ const ElectionResults: React.FC = () => {
             <select
               value={selectedElectionId}
               onChange={handleElectionChange}
-              className="mt-1 block w-64 p-2 border border-gray-300 rounded-md"
+              className="mt-1 block sm:w-64 p-2 border border-gray-300 rounded-md"
             >
               <option value="">Select an Election</option>
               {elections.map((election: Election) => (
@@ -108,7 +108,7 @@ const ElectionResults: React.FC = () => {
               <select
                 value={selectedConstituency}
                 onChange={handleConstituencyChange}
-                className="mt-1 block w-64 p-2 border border-gray-300 rounded-md"
+                className="mt-1 block sm:w-64 p-2 border border-gray-300 rounded-md"
               >
                 <option value="">Select a Constituency</option>
                 {elections.find(election => election.electionId === selectedElectionId)?.constituencies.map((constituency: Constituency) => (
@@ -123,7 +123,7 @@ const ElectionResults: React.FC = () => {
             <div>
               <div className="mb-4">
                 <h2 className="text-xl font-bold mb-5">Candidates List for {selectedConstituency}</h2>
-                <table className="w-full text-center bg-white">
+                <table className="sm:w-full text-center bg-white">
                   <thead>
                     <tr>
                       <th className="py-2">Name</th>
@@ -134,21 +134,21 @@ const ElectionResults: React.FC = () => {
                   <tbody>
                     {candidates.map((candidate, index) => (
                       <tr key={index} className="hover:bg-gray-200">
-                        <td className="py-2 px-4 border">{candidate.name}</td>
-                        <td className="py-2 px-4 border">{candidate.party}</td>
-                        <td className="py-2 px-4 border">{candidate.votes}</td>
+                        <td className="py-2 sm:px-4 px-2 border">{candidate.name}</td>
+                        <td className="py-2 sm:px-4 px-2 border">{candidate.party}</td>
+                        <td className="py-2 sm:px-4 px-2 border">{candidate.votes}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
               <div className="flex flex-col justify-between md:flex-row">
-                <div className="md:w-1/2 p-4 h-96">
-                  <h2 className="text-xl font-bold mb-2">Votes Distribution</h2>
+                <div className="md:w-1/2 p-4 xl:h-96">
+                  <h2 className="text-xl font-bold m-2">Votes Distribution</h2>
                   <Pie data={pieData} />
                 </div>
-                <div className="md:w-1/2 h-96">
-                  <h2 className="text-xl font-bold mb-2">Vote Share Among Parties</h2>
+                <div className="md:w-1/2 ">
+                  <h2 className="text-xl font-bold m-2">Vote Share Among Parties</h2>
                   <Bar data={barData} />
                 </div>
               </div>
